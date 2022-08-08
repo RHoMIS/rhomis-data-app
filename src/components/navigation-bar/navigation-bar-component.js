@@ -7,16 +7,16 @@ import { MdOutlineMenu } from 'react-icons/md'
 import axios from 'axios';
 
 import './navigation-bar-component.css'
-/* 
+/*
 Setting up a standard react navbar to navigation component. Please
 note that if you want to maintain state or context between routes,
 you must use the 'react-router-dom' "link". I have integrated
-this with the Nav.Link component 
+this with the Nav.Link component
 */
 
 
 async function GetAdminData(props) {
-    console.log("authToken: ", props.authToken)
+
     const result = await axios({
         method: 'get',
         url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/meta-data",
@@ -25,10 +25,7 @@ async function GetAdminData(props) {
         }
     })
 
-    console.log("response: ")
-    console.log(result)
     if (result.status === 200) {
-        console.log("Setting project information")
         if (result.data.projects.length > 0) {
             props.setShowProjectManagement(true)
         }
@@ -49,7 +46,6 @@ async function GetAdminData(props) {
 
 
 export default function MainNavbar(props) {
-    console.log("Survey builder url: " + process.env.SURVEY_BUILDER_URL)
     // props.Logout()
     const [authToken, setAuthToken] = useContext(AuthContext)
     const [show, setShow] = useState(false)
@@ -107,10 +103,10 @@ export default function MainNavbar(props) {
                             <Nav.Link className="side-bar-link" as={Link} onClick={() => { handleClose() }} to="/">Portal</Nav.Link>
                         </div>
                         <div className="side-bar-item">
-                            <form style={{ "width": "100%" }} method="post" action={"https://rhomis-survey.stats4sdtest.online/login"} class="inline">
+                            <form style={{ "width": "100%" }} method="post" action={process.env.REACT_APP_SURVEY_BUILDER_URL} class="inline">
                                 <input type="hidden" name="token" value={authToken} />
                                 <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
-                                <input className="form-link" type="submit" value="Design a Survey"
+                                <input className="form-link" type="submit" value="Build a Survey"
                                 />
                             </form>
                         </div>
@@ -119,23 +115,10 @@ export default function MainNavbar(props) {
                             <Nav.Link className="side-bar-link" as={Link} onClick={() => { handleClose() }} to="/projects">Manage Projects</Nav.Link>
                         </div> : <></>}
 
-                        {showCollectData ? <div className="side-bar-item">
-                            <Nav.Link className="side-bar-link" as={Link} onClick={() => { handleClose() }} to="/projects">Collect Data</Nav.Link>
-                        </div> : <></>}
 
 
-                        {/* <div className="side-bar-item">
-                            <Nav.Link className="side-bar-link" onClick={() => { handleClose() }} href="https://rhomis-survey.stats4sdtest.online/login">Design a Survey</Nav.Link>
-                        </div> */}
-                        {/* <div className="side-bar-item">
-                            <Nav.Link className="side-bar-link" as={Link} onClick={() => { handleClose() }} to="/data-collection">Collect Data</Nav.Link>
-                        </div> */}
-                        {/* <div className="side-bar-item">
-                            <Nav.Link className="side-bar-link" as={Link} onClick={() => { handleClose() }} to="/global-data">Global Data</Nav.Link>
-                        </div> */}
-                        {/* <div className="side-bar-item">
-                            <Nav.Link className="side-bar-link" as={Link} onClick={() => { handleClose() }} to="/data-querying">Data Query</Nav.Link>
-                        </div> */}
+
+
                         {showAdmin ? <div className="side-bar-item">
                             <Nav.Link className="side-bar-link" as={Link} onClick={() => {
                                 handleClose()

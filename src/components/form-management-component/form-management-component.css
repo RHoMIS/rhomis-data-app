@@ -17,3 +17,17 @@
  * along with rhomis-data-app.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+ .form-button{
+     width:100%;
+     height:30px;
+     text-align: left !important;
+    padding-left:16px;
+    justify-content: left;
+      border: 0;
+      background-color: #343A40 !important;
+      color: white !important
+ }
+
+ .form-button:hover{
+     background-color: rgb(82,87,92) !important;
+ }

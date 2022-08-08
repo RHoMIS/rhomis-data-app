@@ -28,7 +28,7 @@ import AuthContext from '../authentication-component/AuthContext'
 async function GetProjectInformation(props) {
     console.log("authToken: ", props.authToken)
     const result = await axios({
-        method: 'get',
+        method: 'post',
         url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/meta-data",
         headers: {
             'Authorization': props.authToken
@@ -90,13 +90,13 @@ async function DeleteProject(authToken, projectName) {
 
 async function CreateForm(authToken, projectName, formName, formVersion, formFile) {
     console.log(projectName)
-    console.log(process.env.REACT_APP_AUTHENTICATOR_URL + 'api/forms/new?form_name=' + formName + '&form_version=' + formVersion + '&project_name=' + projectName + '&publish=false')
+    console.log(process.env.REACT_APP_AUTHENTICATOR_URL + 'api/forms/new?form_name=' + formName +  '&project_name=' + projectName + '&publish=false')
 
 
     // Create form
     const formCreationResponse = await axios({
         method: "post",
-        url: process.env.REACT_APP_AUTHENTICATOR_URL + 'api/forms/new?form_name=' + formName + '&form_version=' + formVersion + '&project_name=' + projectName + '&publish=false',
+        url: process.env.REACT_APP_AUTHENTICATOR_URL + 'api/forms/new?form_name=' + formName +  '&project_name=' + projectName + '&publish=false',
         data: formFile,
         headers: {
             'Authorization': authToken,
@@ -110,16 +110,16 @@ async function CreateForm(authToken, projectName, formName, formVersion, formFil
 
 }
 
-async function UpdateForm(authToken, projectName, formName, formVersion, formFile) {
+async function UpdateForm(props) {
 
 
     // Create form
     const formCreationResponse = await axios({
         method: "post",
-        url: process.env.REACT_APP_AUTHENTICATOR_URL + 'api/forms/new-draft?form_name=' + formName + '&form_version=' + formVersion + '&project_name=' + projectName + '&publish=false',
-        data: formFile,
+        url: process.env.REACT_APP_AUTHENTICATOR_URL + 'api/forms/new-draft?form_name=' + props.formName  + '&project_name=' + props.projectName + '&publish=false',
+        data: props.formFile,
         headers: {
-            'Authorization': authToken,
+            'Authorization': props.authToken,
             'Content-Type': "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         }
     })
@@ -127,7 +127,7 @@ async function UpdateForm(authToken, projectName, formName, formVersion, formFil
 }
 
 
-
+// Form to create a new empty project
 function CreateProjectForm(props) {
     return (
         <>
@@ -156,27 +156,36 @@ function CreateProjectForm(props) {
     )
 }
 
-function NewFormEntry(props) {
+// Create a new form within a project 
+// (i.e a form that does not exist already in
+// in the db). 
+function CreateNewBlankForm(props){
+
+    console.log("Draft form data")
+
+    const [formList, setFormList] = useState([])
 
     console.log(props.data)
     let projectList = ["No Projects"]
-    let disabled = true
+    let projectDisabled = true
 
     if (props.data !== undefined & props.data !== null) {
         if (props.data.projects !== undefined) {
             projectList = props.data.projects.map((project) => {
                 return project.name
             })
-            disabled = false
+            projectDisabled = false
         }
 
         if (props.data.projects.length === 0) {
             projectList = ["No Projects"]
-            disabled = true
+            projectDisabled = true
 
         }
     }
     console.log(projectList)
+
+    console.log(props.data)
 
     return (
         <>
@@ -185,7 +194,27 @@ function NewFormEntry(props) {
                     <Form.Label>
                         Select a Project
                     </Form.Label>
-                    <Form.Select defaultValue="Select a Project" onChange={(event) => { props.setSelectedProject(event.target.value) }} disabled={disabled} aria-label="Default select example">
+                    <Form.Select defaultValue="Select a Project" onChange={(event) => {
+
+                        props.setSelectedDraftProject(event.target.value)
+
+                        const newFormList = []
+                        if (props.data !== undefined & props.data !== null) {
+                            if (props.data.forms !== undefined) {
+                                props.data.forms.map((form) => {
+                                    if (form.project === event.target.value & form.live===false) {
+                                        newFormList.push(form.name)
+                                    }
+                                })
+                                setFormList(newFormList)
+                            }
+
+                            if (props.data.projects.length === 0) {
+                                setFormList([])
+                            }
+                        }
+                        }
+                        } disabled={projectDisabled} aria-label="Default select example">
                         <option disabled={true}>Select a Project</option>
                         {projectList.map((option) => {
                             return <option>{option}</option>
@@ -210,11 +239,14 @@ function NewFormEntry(props) {
                     <Form.Text>This must match the "version" field in your xlsx settings tab</Form.Text>
                 </Form.Group>
 
-                <Form.Group>
+                <Form.Group controlId='file-select-blank-form'>
                     <Form.Label>
                         Select your file
                     </Form.Label>
-                    <Form.Control type="file" size="lg" onChange={(e) => props.setSelectedFile(e.target.files[0])} />
+                    <Form.Control type="file" size="lg" onChange={(e) => {
+                        e.stopPropagation()
+                        props.setSelectedFile(e.target.files[0])}
+                        }/>
 
                 </Form.Group>
                 <Button onClick={async () => {
@@ -225,10 +257,10 @@ function NewFormEntry(props) {
             </Form>
         </>
     )
+
 }
 
-
-function NewDraftFormEntry(props) {
+function UpdateDraftForm(props) {
     console.log("Draft form data")
 
     const [formList, setFormList] = useState([])
@@ -261,7 +293,149 @@ function NewDraftFormEntry(props) {
             <Form>
                 <Form.Group>
                     <Form.Label>
+                    Select the project containing the form you would like to update
+                    </Form.Label>
+                    <Form.Select defaultValue="Select a Project" onChange={(event) => {
+
+                        props.setSelectedDraftProject(event.target.value)
+
+                        const newFormList = []
+                        if (props.data !== undefined & props.data !== null) {
+                            if (props.data.forms !== undefined) {
+                                props.data.forms.map((form) => {
+                                    if (form.project === event.target.value) {
+                                        newFormList.push(form)
+                                    }
+                                })
+                                setFormList(newFormList)
+                            }
+
+                            if (props.data.projects.length === 0) {
+                                setFormList([])
+                            }
+                        }
+                    }
+                    } disabled={projectDisabled} aria-label="Default select example">
+                        <option disabled={true}>Select a Project</option>
+                        {projectList.map((option) => {
+                            return <option>{option}</option>
+                        })}
+                    </Form.Select>
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>
                         Select the form you would like to update
+                    </Form.Label>
+                    <Form.Select defaultValue="Select a form" onChange={(event) => {
+                        props.setNewDraftFormName(event.target.value)
+                    }
+                    } aria-label="Default select example">
+                        <option disabled={true}>Select a form</option>
+                        {formList.map((option) => {
+                            let status = ""
+
+                            if (option.draft===true){
+                                status =  "draft: " + option.draftVersion
+                            }
+                            if (option.live===true){
+                                status = "live: " + option.liveVersion
+                            }
+
+                            if (option.live===true & option.draft===true){
+                                status = "draft: " + option.draftVersion + ", live: " + option.liveVersion
+
+                            }
+
+                            return <option value={option.name}>{option.name + " (" + status + ")"}</option>
+                        })}
+                    </Form.Select>
+                </Form.Group>
+
+
+                {/* <Form.Group>
+                    <Form.Label>
+                        Enter the new form version
+                    </Form.Label>
+                    <Form.Control onChange={(event) => { props.setNewDraftFormVersion(event.target.value) }} />
+
+
+                    <Form.Text>This must match the "version" field in your xlsx settings tab, please ensure it is different to the previous version</Form.Text>
+                </Form.Group> */}
+                {/* <div className="m-3">
+                <label className="mx-3">Choose file: </label>
+                <input id="input-file" className="d-none" type="file" />
+                <button onClick={handleUpload} className="btn btn-outline-primary">
+                    Upload
+                </button>
+                </div> */}
+                
+
+                <Form.Group controlId='file-select-update-form'>
+                    <Form.Label>
+                        Select your file
+                    </Form.Label>
+
+                    <Form.Control type="file" size="lg" onChange={(e) => {
+                        props.setSelectedDraftFile(e.target.files[0])}
+                        
+                        } />
+
+                </Form.Group>
+                <Button onClick={async () => {
+                    await UpdateForm(
+                        {
+                        authToken: props.authToken, 
+                        projectName: props.selectedDraftProject, 
+                        formName: props.newDraftFormName, 
+                        formVersion:props.newDraftFormVersion, 
+                        formFile: props.selectedDraftFile
+                })
+                    await props.GetProjectInformation({ authToken: props.authToken, setProjectInformation: props.setProjectInformation })
+                }}>Submit</Button>
+            </Form>
+        </>
+    )
+}
+
+
+function FinalizeFormEntry(props) {
+
+
+    console.log("Draft form data")
+
+    const [formList, setFormList] = useState([])
+
+
+    console.log(props.data)
+    let projectList = ["No Projects"]
+    let projectDisabled = true
+
+    if (props.data !== undefined & props.data !== null) {
+        if (props.data.projects !== undefined) {
+            projectList = props.data.projects.map((project) => {
+                return project.name
+            })
+            projectDisabled = false
+        }
+
+        if (props.data.projects.length === 0) {
+            projectList = ["No Projects"]
+            projectDisabled = true
+
+        }
+    }
+    console.log(projectList)
+
+    console.log(props.data)
+
+
+    return (
+        <>
+            <Form>
+                <Form.Group>
+                    <Form.Label>
+                        Select a project
                     </Form.Label>
                     <Form.Select defaultValue="Select a Project" onChange={(event) => {
 
@@ -293,9 +467,11 @@ function NewDraftFormEntry(props) {
 
                 <Form.Group>
                     <Form.Label>
-                        Select the form you would like to update
+                        Select the form you would like to finalize
                     </Form.Label>
                     <Form.Select defaultValue="Select a form" onChange={(event) => {
+                        console.log("Form name seleceted")
+                        console.log(event.target.value)
                         props.setNewDraftFormName(event.target.value)
                     }
                     } aria-label="Default select example">
@@ -307,33 +483,46 @@ function NewDraftFormEntry(props) {
                 </Form.Group>
 
 
-                <Form.Group>
-                    <Form.Label>
-                        Enter the new form version
-                    </Form.Label>
-                    <Form.Control onChange={(event) => { props.setNewDraftFormVersion(event.target.value) }} />
-
-
-                    <Form.Text>This must match the "version" field in your xlsx settings tab, please ensure it is different to the previous version</Form.Text>
-                </Form.Group>
-
-                <Form.Group>
-                    <Form.Label>
-                        Select your file
-                    </Form.Label>
-                    <Form.Control type="file" size="lg" onChange={(e) => props.setSelectedDraftFile(e.target.files[0])} />
-
-                </Form.Group>
                 <Button onClick={async () => {
-                    await UpdateForm(props.authToken, props.selectedDraftProject, props.newDraftFormName, props.newDraftFormVersion, props.selectedDraftFile)
+                    await FinalizeForm({
+                        authToken: props.authToken,
+                        project: props.selectedDraftProject,
+                        form: props.newDraftFormName
+                    })
                     await props.GetProjectInformation({ authToken: props.authToken, setProjectInformation: props.setProjectInformation })
-                }}>Submit</Button>
+                }}>Finalise</Button>
             </Form>
         </>
     )
 }
 
 
+async function FinalizeForm(props) {
+
+    console.log("Finalizing form")
+    console.log(props)
+    const result = await axios({
+        method: 'post',
+        url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/forms/publish",
+        headers: {
+            'Authorization': props.authToken
+        },
+        params: {
+            form_name: props.form,
+            project_name: props.project
+        }
+    })
+
+
+
+
+
+}
+
+
+// Render all of the project information and
+// allow administrator to delete any of the 
+// individual projects
 function RenderProjectInformation(props) {
 
     console.log(props)
@@ -450,8 +639,20 @@ export default function FormCreationComponent() {
 
     const [newAdmin, setNewAdmin] = useState(null)
 
-    useEffect(async () => {
+    useEffect(() => {
+
+
+        async function GetUserInfo() {
         await GetProjectInformation({ authToken: authToken, setProjectInformation: setProjectInformation })
+        // const response = await FetchUserInformation({
+        //     authToken: authToken,
+        //     setUserInfo: setAdminData
+        // })
+
+
+    }
+
+    GetUserInfo()
     }, [])
 
 
@@ -485,9 +686,9 @@ export default function FormCreationComponent() {
                                     authToken={authToken} /></Accordion.Body>
                         </Accordion.Item>
                         <Accordion.Item eventKey="2">
-                            <Accordion.Header>Create a Form</Accordion.Header>
+                            <Accordion.Header>Create a New Draft Form (Blank)</Accordion.Header>
                             <Accordion.Body>
-                                <NewFormEntry
+                                <CreateNewBlankForm
                                     GetProjectInformation={GetProjectInformation}
                                     setProjectInformation={setProjectInformation}
                                     authToken={authToken}
@@ -502,10 +703,12 @@ export default function FormCreationComponent() {
                                     selectedProject={selectedProject} />
                             </Accordion.Body>
                         </Accordion.Item>
+
+                        
                         <Accordion.Item eventKey="3">
                             <Accordion.Header>Update Draft Form</Accordion.Header>
                             <Accordion.Body>
-                                <NewDraftFormEntry
+                                <UpdateDraftForm
                                     GetProjectInformation={GetProjectInformation}
                                     setProjectInformation={setProjectInformation}
                                     authToken={authToken}
@@ -522,6 +725,21 @@ export default function FormCreationComponent() {
                         </Accordion.Item>
 
                         <Accordion.Item eventKey="4">
+                            <Accordion.Header>Finalize a Form</Accordion.Header>
+                            <Accordion.Body>
+                                <FinalizeFormEntry
+                                    GetProjectInformation={GetProjectInformation}
+                                    setProjectInformation={setProjectInformation}
+                                    authToken={authToken}
+                                    data={projectInformation}
+                                    setSelectedDraftProject={setSelectedDraftProject}
+                                    selectedDraftProject={selectedDraftProject}
+                                    setNewDraftFormName={setNewDraftFormName}
+                                    newDraftFormName={newDraftFormName}
+                                />
+                            </Accordion.Body>
+                        </Accordion.Item>
+                        <Accordion.Item eventKey="5">
                             <Accordion.Header>Add Administrator</Accordion.Header>
                             <Accordion.Body>
                                 <Form>

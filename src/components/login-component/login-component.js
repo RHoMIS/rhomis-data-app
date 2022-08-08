@@ -10,16 +10,41 @@ import "./login-component.css"
 
 import AuthContext from '../authentication-component/AuthContext';
 
+import { Store } from 'react-notifications-component';
 
 
 
 function CheckCredentials(props) {
-    if (props.email === null) {
-        props.setRequestError("No email given")
+    if (props.email === null |
+        props.email === "") {
+        Store.addNotification({
+            title: "User Error",
+            message: "Must include email",
+            type: "danger",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+                duration: 2000
+            }
+        });
         return false
     }
-    if (props.password === null) {
-        props.setRequestError("No password given")
+    if (props.password === null |
+        props.password === "") {
+        Store.addNotification({
+            title: "User Error",
+            message: "Must password",
+            type: "danger",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+                duration: 2000
+            }
+        });
         return false
     }
 
@@ -94,6 +119,7 @@ function LoginCard(props) {
                             />
                             Loading</Button> :
                             <Button className="login-buttons"
+                                type="submit"
                                 variant="dark"
                                 onClick={async (event) => {
                                     setLoading(true)
@@ -150,7 +176,16 @@ async function Login(props) {
     props.setRequestError(null)
 
 
-    const credentialsGiven = CheckCredentials({ email: props.email, password: props.password, requestError: props.requestError, setRequestError: props.setRequestError })
+    const credentialsGiven = CheckCredentials({ email: props.email, password: props.password })
+
+    if (credentialsGiven == false) {
+        return ({
+            status: 400,
+            message: "Missing Credentials"
+        })
+
+    }
+
 
     try {
         // await timeout(2000)
@@ -166,7 +201,19 @@ async function Login(props) {
         console.log(response)
         return (response)
     } catch (err) {
-        props.setRequestError(err.response.data)
+        Store.addNotification({
+            title: "Error",
+            message: err.response.data,
+            type: "danger",
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animate__animated", "animate__fadeIn"],
+            animationOut: ["animate__animated", "animate__fadeOut"],
+            dismiss: {
+                duration: 2000
+
+            }
+        });
         return (err.response)
 
     }

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with rhomis-data-app.  If not, see <http://www.gnu.org/licenses/>.
 
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState} from 'react'
 
 import { Login, LoginComponent } from "../login-component/login-component"
 import { DataQueryComponent } from "../data-query-component/data-query-component"
@@ -24,10 +24,12 @@ import PortalComponent from '../portal-component/portal-component';
 import NotFoundComponent from '../not-found-component/not-found-component';
 import ProjectManagementComponent from "../project-management-component/project-management-component"
 import FormManagementComponent from '../form-management-component/form-management-component';
-import FormAdminComponent from '../form-admin-component/form-admin-component';
-// import AccountManagementComponent from './components/account-management-component/account-management-component';
 import MainNavbar from '../navigation-bar/navigation-bar-component'
 import FormCreationComponent from '../form-creation-component/form-creation-component';
+
+import DataCollectionComponent from '../data-collection-component/data-collection-component';
+import DataAccessComponent from '../data-access-component/data-access-component';
+import UserManagementComponent from '../user-management-component/user-management-component';
 import AuthContext from '../authentication-component/AuthContext';
 import UserContext from '../user-info-component/UserContext';
 import {
@@ -48,7 +50,11 @@ import { FetchUserInformation, CheckForLocalToken } from '../fetching-context-in
 export default function RoutingComponent() {
 
     const [authToken, setAuthToken] = useContext(AuthContext)
-    const [userInfo, setUserInfo] = useContext(UserContext)
+
+    const [loading, setLoading] = useState(false)
+    const [authenticated, setAuthenticated] = useState(null)
+
+    // const [userInfo, setUserInfo] = useContext(UserContext)
     const history = useHistory()
     // const location = useLocation()
 
@@ -58,65 +64,94 @@ export default function RoutingComponent() {
         })
     }, [])
 
-    useEffect(() => {
-        FetchUserInformation({
-            authToken: authToken,
-            setUserInfo: setUserInfo
-        })
-    }, [authToken])
+
+
+
+    // useEffect(() => {
+    //     FetchUserInformation({
+    //         authToken: authToken,
+    //         setUserInfo: setUserInfo
+    //     })
+    // }, [authToken])
+
+
+
 
     console.log("Auth token context")
     console.log(authToken)
 
+  
+        if (authToken) {
+           return(<AuthenticatedComponents authToken={authToken} />)
+        }
+    
+        if (!authToken) {
+            return ( <PublicComponents authToken={authToken} />)
+        }
+    
+    
+   
+    
 
-    if (authToken) {
-        return (
-            < Router >
-                <MainNavbar />
-                {/* <Fade> */}
-                <Switch>
-                    <Route exact path="/">
-                        <Redirect from="/" to="/home" />
-                    </Route>
-                    <Route path="/home" component={PortalComponent} />
-
-                    <Route path="/projects/:projectName/forms/:formName" component={FormAdminComponent} />
-                    <Route path="/projects/:projectName" component={FormManagementComponent} />
-
-                    <Route path="/projects" ><ProjectManagementComponent /></Route>
-
-
-                    {/* <Route path="/project/:projectName/form/:formName"><FormManagementComponent /></Route> */}
-
-                    <Route path="/data-querying" component={DataQueryComponent} />
-                    <Route path="/administration" component={FormCreationComponent} />
-
-                    {/* <Route path="*" component={NotFoundComponent} /> */}
-                    {/* <Redirect from="*" to="/home" /> */}
-
-                </Switch >
-                {/* </Fade> */}
-
-            </Router >
-        )
-    }
-
-    if (!authToken) {
-        return (
-            < Router >
-                {/* <Fade> */}
-                <Switch>
-                    <Route exact path="/">
-                        <Redirect from="/" to="/login" />
-                    </Route>
-                    <Route path="/register"><RegisterComponent /></Route>
-                    <Route path="/login"><LoginComponent /></Route>
-                    {/* <Redirect from="*" to="/login" /> */}
-                </Switch >
-                {/* </Fade> */}
-
-            </Router >
-        )
-    }
 }
+
+function AuthenticatedComponents(props){
+    return (
+        < Router >
+            <MainNavbar />
+            <Switch>
+                <Route exact path="/">
+                    <Redirect from="/" to="/home" />
+                </Route>
+                <Route path="/home" component={PortalComponent} />
+                <Route path="/register"><RegisterComponent /></Route>
+
+                <Route path="/projects/:projectName/forms/:formName/collect/:draftOrLive" component={DataCollectionComponent} />
+                <Route path="/projects/:projectName/forms/:formName/users" component={UserManagementComponent} />
+                <Route path="/projects/:projectName/forms/:formName/data" component={DataAccessComponent} />
+                <Route path="/projects/:projectName" component={FormManagementComponent} />
+
+                <Route path="/projects" ><ProjectManagementComponent /></Route>
+
+
+
+                <Route path="/data-querying" component={DataQueryComponent} />
+                <Route path="/administration" component={FormCreationComponent} />
+
+                {/* <Route path="*" component={NotFoundComponent} /> */}
+                <Redirect from="*" to="/home" />
+
+            </Switch >
+            {/* </Fade> */}
+
+        </Router >
+    )
+
+}
+
+
+function PublicComponents(props){
+
+    // const history = useHistory()
+
+    // useEffect(()=>{
+    //     history.push("/login")
+    // })
+    
+    return (
+        < Router >
+            {/* <Fade> */}
+            <Switch>
+                <Route exact path="/">
+                    <Redirect from="/" to="/login" />
+                </Route>
+                <Route path="/register"><RegisterComponent /></Route>
+                <Route path="/login"><LoginComponent /></Route>
+            </Switch >
+            {/* </Fade> */}
+
+        </Router >
+    )
+}
+
 

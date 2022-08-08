@@ -17,29 +17,6 @@ import { deflateSync } from 'zlib'
 import { FetchUserInformation, CheckForLocalToken } from '../fetching-context-info/fetching-context-info'
 
 
-// async function GetProjectInformation(props) {
-//     console.log("authToken: ", props.authToken)
-//     const result = await axios({
-//         method: 'get',
-//         url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/meta-data",
-//         headers: {
-//             'Authorization': props.authToken
-//         }
-//     })
-
-//     console.log("response: ")
-//     console.log(result)
-//     if (result.status === 200) {
-//         console.log("Setting project information")
-
-//         props.setAdminData(result.data)
-//     }
-//     if (result.status === 400) {
-//         alert(result.data)
-//     }
-// }
-
-
 function NoProjectFound() {
 
     return (
@@ -106,10 +83,10 @@ function RenderProjectInformation(props) {
                             return (
                                 <tr key={"table-row-" + index}>
 
-                                    <td key={"table-row-" + index + "-item-1"}>{project.name}</td>
-                                    <td key={"table-row-" + index + "-item-2"}>{project.description}</td>
-                                    <td key={"table-row-" + index + "-item-3"}>{dateString}</td>
-                                    <td key={"table-row-" + index + "-item-4"}>
+                                    <td style={{ "vertical-align": "middle" }} key={"table-row-" + index + "-item-1"}>{project.name}</td>
+                                    <td style={{ "vertical-align": "middle" }} key={"table-row-" + index + "-item-2"}>{project.description}</td>
+                                    <td style={{ "vertical-align": "middle" }} key={"table-row-" + index + "-item-3"}>{dateString}</td>
+                                    <td style={{ "vertical-align": "middle" }} key={"table-row-" + index + "-item-4"}>
                                         <Button className="bg-dark text-white border-0" onClick={() => {
                                             history.push("/projects/" + project.name)
                                             // props.setProjectSelected(project.name)

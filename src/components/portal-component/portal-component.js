@@ -78,7 +78,6 @@ function PortalCard(props) {
             <div>
                 <form method="post" action={props.data.link} class="inline">
                     <input type="hidden" name="token" value={props.authToken} />
-                    {/* <input type="hidden" name="X-XSRF-TOKEN" value={"eyJpdiI6IndJR29DYUNDbjQ5eG1taWJUVjJ1NVE9PSIsInZhbHVlIjoiVisvTVNCc2puS1ZsZWlhYnZBbHpMd01odksyWm9laG9UdE45N3dHcWp5c3hNRWNuK3FCbVRPa0xTcEZoNXhPSWxtbUFZUFdxbTY3a0RrVU5UWUQwOG0wTGRQL1lINC9kT3NndkVGeWtPVTFtTlc5clBnYWN4NmF0MGxxTGhtcUciLCJtYWMiOiIxZTUyMjJhZDFhZjNiNzMwZTZlZTQxZTM4NTJhNzk2OTY5OGM3ODUwZDU1NzliNTUwYjRiNTVlYmM3ZjJkNzc4IiwidGFnIjoiIn0%3D"} /> */}
                     <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
                     <button type="submit" style={{ margin: 0, padding: 0, border: 0, backgroundColor: "white" }}>
 
@@ -103,7 +102,7 @@ function PortalCard(props) {
     if (props.data.external === true & props.data.label !== "surveyBuilder") {
         return (
             <div>
-                <Link style={{ 'textDecoration': 'none' }} target="_blank" to={{ pathname: props.data.link }}>
+                <a style={{ 'textDecoration': 'none' }} href={props.data.link} target="_blank">
                     < Card className="sub-card portal-card border-0">
                         <div className="portal-card-header-container">
                             <h4 className="portal-card-header">{props.data.name}</h4>
@@ -113,7 +112,7 @@ function PortalCard(props) {
                             <Icon size={100} color="white" />
                         </div>
                     </Card >
-                </Link>
+                </a>
 
             </div >
         )
@@ -142,10 +141,6 @@ function RenderPortalCards(props) {
             portalCardData.push(...cardToAdd)
         }
 
-        if (props.userData.researcher.length > 0) {
-            const cardToAdd = props.data.filter(item => item.label === "globalData")
-            portalCardData.push(...cardToAdd)
-        }
 
         if (props.userData.administrator === true) {
             const cardToAdd = props.data.filter(item => item.label === "administrator")
@@ -153,6 +148,11 @@ function RenderPortalCards(props) {
         }
 
 
+        if (props.userData.researcher.length > 0 |
+            props.userData.basic === true) {
+            const cardToAdd = props.data.filter(item => item.label === "globalData")
+            portalCardData.push(...cardToAdd)
+        }
         if (props.userData.basic === true) {
             const cardToAdd = props.data.filter(item => item.label === "help")
             portalCardData.push(...cardToAdd)

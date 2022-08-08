@@ -34,6 +34,8 @@ import AuthContext from './components/authentication-component/AuthContext';
 import UserContext from './components/user-info-component/UserContext';
 
 
+import { ReactNotifications } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 
 
@@ -42,15 +44,19 @@ function App() {
   const [userInfo, setUserInfo] = useState(null)
 
   return (
-    <AuthContext.Provider value={[authToken, setAuthToken]}>
-      <UserContext.Provider value={[userInfo, setUserInfo]}>
-        <div className="main-app-background">
-          <div className="main-page">
-            <RoutingComponent />
-          </div >
-        </div>
-      </UserContext.Provider>
-    </AuthContext.Provider>
+    <>
+      <ReactNotifications />
+
+      <AuthContext.Provider value={[authToken, setAuthToken]}>
+        <UserContext.Provider value={[userInfo, setUserInfo]}>
+          <div className="main-app-background">
+            <div className="main-page">
+              <RoutingComponent />
+            </div >
+          </div>
+        </UserContext.Provider>
+      </AuthContext.Provider>
+    </>
   );
 }
 
