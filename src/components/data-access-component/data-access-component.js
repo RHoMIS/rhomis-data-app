@@ -357,7 +357,7 @@ async function ProcessData(props) {
         commandType: props.commandType,
         projectName: props.projectSelected,
         formName: props.formSelected,
-        formVersion: form.formVersion,
+        formVersion: form.liveVersion,
         draft: form.draft,
       },
     });

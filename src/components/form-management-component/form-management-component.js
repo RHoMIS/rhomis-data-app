@@ -1,42 +1,15 @@
-// Copyright (C) 2022 Léo Gorman
-//
-// This file is part of rhomis-data-app.
-//
-// rhomis-data-app is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// rhomis-data-app is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with rhomis-data-app.  If not, see <http://www.gnu.org/licenses/>.
-
 import { useParams } from "react-router-dom";
-import {
-  FetchUserInformation,
-  GetInformationForFormComponent,
-} from "../fetching-context-info/fetching-context-info";
+import { FetchUserInformation } from "../fetching-context-info/fetching-context-info";
 import { Spinner } from "react-bootstrap";
 
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Form,
-  Button,
-  Card,
-  Table,
-  CardGroup,
-  DropdownButton,
-  Dropdown,
-} from "react-bootstrap";
+import { Button, Card, Table, DropdownButton, Dropdown } from "react-bootstrap";
+
 import axios from "axios";
 import AuthContext from "../authentication-component/AuthContext";
 import UserContext from "../user-info-component/UserContext";
 import "../project-management-component/project-management-component.css";
-import "./form-management-component.css"
+import "./form-management-component.css";
 import "../../App.css";
 
 import { useHistory } from "react-router";
@@ -45,35 +18,11 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 
 import QRCode from "react-qr-code";
 import { deflateSync } from "zlib";
+import DropdownItem from "react-bootstrap/esm/DropdownItem";
 
-// Generating a link to download the csv data
-
-// async function FinalizeForm(props) {
-
-//     console.log("Finalizing form")
-
-//     const result = await axios({
-//         method: 'post',
-//         url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/forms/publish",
-//         headers: {
-//             'Authorization': props.authToken
-//         },
-//         params: {
-//             form_name: props.form,
-//             project_name: props.project
-//         }
-//     })
-
-//     FetchUserInformation({
-//         authToken: props.authToken,
-//         setUserInfo: props.setAdminData
-//     })
-
-//     // console.log("Finalization response")
-//     // console.log(result)
-
-// }
-
+/*
+ Format date so it appears correctly 
+ */
 function formatDate(date) {
   var d = new Date(date),
     month = "" + (d.getMonth() + 1),
@@ -106,10 +55,249 @@ function NoInfoFound() {
   );
 }
 
+// Render the Submission Count
+function SubmissionsCount(props) {
+  let submissions = "";
+
+  if (props.form === undefined) {
+    return (
+      <>
+        <Spinner
+          as="span"
+          animation="border"
+          size="sm"
+          role="status"
+          aria-hidden="true"
+        />
+      </>
+    );
+  }
+  if (props.form.submissions === undefined) {
+    return (
+      <>
+        <Spinner
+          as="span"
+          animation="border"
+          size="sm"
+          role="status"
+          aria-hidden="true"
+        />
+      </>
+    );
+  }
+
+  if (props.draftOrLive === "draft") {
+    submissions = props.form.submissions.draft;
+  }
+
+  if (props.draftOrLive === "live") {
+    submissions = props.form.submissions.live;
+  }
+
+  return (
+    <>
+      {props.submissionsLoading ? (
+        <Spinner
+          as="span"
+          animation="border"
+          size="sm"
+          role="status"
+          aria-hidden="true"
+        />
+      ) : (
+        submissions
+      )}
+    </>
+  );
+}
+
+
+async function FinalizeForm(props) {
+
+  console.log("Finalizing form")
+  console.log(props)
+  const result = await axios({
+      method: 'post',
+      url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/forms/publish",
+      headers: {
+          'Authorization': props.authToken
+      },
+      params: {
+          form_name: props.form,
+          project_name: props.project
+      }
+  })
+}
+
+// Render the options button for each form
+function FormOptions(props) {
+  console.log("Form Options Props");
+  console.log(props);
+
+  let render_live = false;
+  let render_draft = false;
+  let edit_published = false;
+
+  if (props.form == undefined) {
+    return <></>;
+  }
+
+  if (props.form.submissions == undefined) {
+    return <></>;
+  }
+
+  if (props.form.live === true) {
+    render_live = true;
+  }
+
+  if (props.form.draft === true) {
+    render_draft = true;
+  }
+
+  if ((props.form.draft === false) & (props.form.live === true)) {
+    edit_published = true;
+  }
+
+  return (
+    <>
+      <DropdownButton
+        title="Options"
+        variant="dark"
+        menuVariant="dark border-0"
+        drop="end">
+        {/* LIVE FORMS OPTIONS */}
+        {render_live ? (
+          <>
+            <Dropdown.Header>Live Forms</Dropdown.Header>
+
+            <Dropdown.Item
+              className="dark text-white border-0"
+              onClick={() => {
+                props.history.push(
+                  "/projects/" +
+                    props.projectSelected +
+                    "/forms/" +
+                    props.form.name +
+                    "/collect/live"
+                );
+              }}>
+              Collect Data
+            </Dropdown.Item>
+
+            <form
+              method="post"
+              action={process.env.REACT_APP_SURVEY_BUILDER_URL}
+              class="inline">
+              <input type="hidden" name="token" value={props.authToken} />
+              <input
+                type="hidden"
+                name="redirect_url"
+                // New endpoint for survey builder
+
+                value={"/xlsform/" + props.form.name + "/edit"}
+              />
+
+              {/* Edit Published Form */}
+
+              {edit_published ? (
+                <button type="submit" value="submit" className="form-button">
+                  Create New Draft
+                </button>
+              ) : (
+                <></>
+              )}
+            </form>
+
+            {props.form.submissions.live > 0 ? (
+              <Dropdown.Item
+                className="dark text-white border-0"
+                onClick={() => {
+                  props.history.push(
+                    "/projects/" +
+                      props.projectSelected +
+                      "/forms/" +
+                      props.form.name +
+                      "/data"
+                  );
+                }}>
+                Access Data
+              </Dropdown.Item>
+            ) : (
+              <></>
+            )}
+          </>
+        ) : (
+          <></>
+        )}
+
+        {render_draft ? (
+          <>
+            <Dropdown.Header>Draft Forms</Dropdown.Header>
+
+            <Dropdown.Item
+              className="dark text-white border-0"
+              onClick={() => {
+                props.history.push(
+                  "/projects/" +
+                    props.projectSelected +
+                    "/forms/" +
+                    props.form.name +
+                    "/collect/draft"
+                );
+              }}>
+              Test Survey
+            </Dropdown.Item>
+            <form
+              method="post"
+              action={process.env.REACT_APP_SURVEY_BUILDER_URL}
+              class="inline">
+              <input type="hidden" name="token" value={props.authToken} />
+              <input
+                type="hidden"
+                name="redirect_url"
+                value={"/xlsform/" + props.form.name + "/edit"}
+              />
+              <button type="submit" value="submit" className="form-button">
+                Edit Draft
+              </button>
+            </form>
+
+            <DropdownItem>Finalise</DropdownItem>
+          </>
+        ) : (
+          <></>
+        )}
+        <Dropdown.Header>Settings</Dropdown.Header>
+
+        <Dropdown.Item
+          className="dark text-white border-0"
+          onClick={() => {
+            props.history.push(
+              "/projects/" +
+                props.projectSelected +
+                "/forms/" +
+                props.form.name +
+                "/users"
+            );
+          }}>
+          Manage Users
+        </Dropdown.Item>
+      </DropdownButton>
+    </>
+  );
+}
+
+// A table for all of the
+// forms
 function FormTables(props) {
   const history = useHistory();
 
+  // Don't allow users to finalize from this table
   let allowToFinalize = false;
+
+  // Checking whether or not
+  // the component is has all of the
+  // form data needed for the table
   if (!props.data) {
     return <NoInfoFound />;
   }
@@ -124,6 +312,8 @@ function FormTables(props) {
       allowToFinalize = true;
   }
 
+  // Filtering through the forms based on
+  // URL parameters. Passed through props.
   let formsExist = false;
 
   if (props.data.forms !== undefined) {
@@ -137,14 +327,15 @@ function FormTables(props) {
 
   return (
     <Table striped bordered hover>
-        
       <thead>
         <tr>
           <th>Form Name</th>
-          <th>Status</th>
+          <th>Draft Version</th>
+          <th>Draft Submissions</th>
 
-          <th>Created At</th>
-          <th>Submissions</th>
+          <th>Live Version</th>
+          <th>Live Submissions</th>
+
           <th></th>
         </tr>
       </thead>
@@ -174,109 +365,36 @@ function FormTables(props) {
                 <tr>
                   <td style={{ "vertical-align": "middle" }}>{form.name}</td>
                   <td style={{ "vertical-align": "middle" }}>
-                    {form.draft ? "Draft" : "Finalized"}
+                    {form.draft ? form.draftVersion : ""}
                   </td>
-                  <td style={{ "vertical-align": "middle" }}>{dateString}</td>
                   <td style={{ "vertical-align": "middle" }}>
-                    {props.submissionsLoading ? (
-                      <Spinner
-                        as="span"
-                        animation="border"
-                        size="sm"
-                        role="status"
-                        aria-hidden="true"
-                      />
-                    ) : (
-                      form.submissions
-                    )}
+                    <SubmissionsCount
+                      submissionsLoading={props.submissionsLoading}
+                      form={form}
+                      draftOrLive="draft"
+                    />
+                  </td>
+
+                  <td style={{ "vertical-align": "middle" }}>
+                    {form.live ? form.liveVersion : ""}
+                  </td>
+
+                  <td style={{ "vertical-align": "middle" }}>
+                    <SubmissionsCount
+                      submissionsLoading={props.submissionsLoading}
+                      form={form}
+                      draftOrLive="live"
+                    />
                   </td>
 
                   <td style={{ "text-align": "center" }}>
-                    <DropdownButton
-                      title="Options"
-                      variant="dark"
-                      menuVariant="dark border-0"
-                      drop="end"
-                    >
-                      <Dropdown.Item
-                        className="dark text-white border-0"
-                        onClick={() => {
-                          history.push(
-                            "/projects/" +
-                              props.projectSelected +
-                              "/forms/" +
-                              form.name +
-                              "/collect"
-                          );
-                        }}
-                      >
-                        Collect Data
-                      </Dropdown.Item>
-                     
-                           
-                      {/* <Dropdown.Item className="dark text-white border-0"> */}
-                      {form.draft?
-                      <form
-                          method="post"
-                          action={"https://rhomis-survey.stats4sdtest.online/login"}
-                          class="inline"
-                        >
-                          <input
-                            type="hidden"
-                            name="token"
-                            value={props.authToken}
-                          />
-                          <input
-                            type="hidden"
-                            name="redirect_url"
-                            value={"/xlsform/"+form.name+"/edit"}
-                          />
-                      <button
-                            type="submit"
-                            value="submit"
-                            className="form-button"
-                            
-                          >
-                            Edit Form
-                            </button>
-                            </form>:<></>}
-
-                      {/* </Dropdown.Item> */}
-
-
-                      <Dropdown.Item
-                        className="dark text-white border-0"
-                        onClick={() => {
-                          history.push(
-                            "/projects/" +
-                              props.projectSelected +
-                              "/forms/" +
-                              form.name +
-                              "/users"
-                          );
-                        }}
-                      >
-                        Manage Users
-                      </Dropdown.Item>
-                      {accessData ? (
-                        <Dropdown.Item
-                          className="dark text-white border-0"
-                          onClick={() => {
-                            history.push(
-                              "/projects/" +
-                                props.projectSelected +
-                                "/forms/" +
-                                form.name +
-                                "/data"
-                            );
-                          }}
-                        >
-                          Access Data
-                        </Dropdown.Item>
-                      ) : (
-                        <></>
-                      )}
-                    </DropdownButton>
+                    <FormOptions
+                      history={history}
+                      form={form}
+                      projectSelected={props.projectSelected}
+                      authToken={props.authToken}
+                      accessData={accessData}
+                    />
                   </td>
                 </tr>
               );
@@ -359,14 +477,14 @@ function FormManagementComponent() {
   const data = null;
 
   useEffect(() => {
-    console.log('projectSelected:  ' + projectSelected)
+    console.log("projectSelected:  " + projectSelected);
 
     async function GetUserInfo() {
       await FetchUserInformation({
         authToken: authToken,
         setUserInfo: setAdminData,
         getSubmissionCount: true,
-        projectName: projectSelected
+        projectName: projectSelected,
       });
 
       setSubmissionLoading(false);
@@ -374,12 +492,6 @@ function FormManagementComponent() {
 
     GetUserInfo();
   }, []);
-
-  // useEffect(() => {
-  //     console.log("Form Data")
-  //     console.log(formData)
-
-  // }, [formData])
 
   return (
     <div id="project-management-container" className="sub-page-container">
@@ -392,15 +504,13 @@ function FormManagementComponent() {
                 display: "flex",
                 "flex-direction": "row",
                 "margin-left": "auto",
-              }}
-            >
+              }}>
               <div className="main-card-header-item">{projectSelected}</div>
               <Button
                 className="bg-dark border-0"
                 onClick={() => {
                   history.push("/projects");
-                }}
-              >
+                }}>
                 <AiOutlineArrowLeft size={25} />
               </Button>
             </div>

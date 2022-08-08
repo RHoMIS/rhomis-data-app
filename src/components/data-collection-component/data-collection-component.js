@@ -38,6 +38,7 @@ async function ProcessData(props) {
 
 function SetInitialFormState(props) {
 
+
     // Check if the form code in the URL is correct
     function CheckFormCode(props) {
         if (!props.data) {
@@ -96,11 +97,11 @@ function SetInitialFormState(props) {
             return false
         }
 
-        if (form[0].draft === true) {
+        if (form[0].draft === true & props.draftOrLive==="draft") {
             return form[0].draftCollectionDetails
 
         }
-        if (form[0].draft === false) {
+        if (form[0].live === true & props.draftOrLive==="live") {
             return form[0].collectionDetails
         }
 
@@ -124,12 +125,12 @@ function SetInitialFormState(props) {
             return false
         }
 
-        if (form[0].draft === true) {
+        if ( props.draftOrLive==="draft") {
             let odkConf = form[0].draftCollectionDetails
             return deflateSync(JSON.stringify(odkConf)).toString('base64')
 
         }
-        if (form[0].draft === false) {
+        if (  props.draftOrLive==="live") {
             let odkConf = form[0].collectionDetails
             return deflateSync(JSON.stringify(odkConf)).toString('base64')
         }
@@ -139,65 +140,52 @@ function SetInitialFormState(props) {
 
     }
 
-    // Check if the form is a draft
-    function CheckDraft(props) {
 
-        if (!props.data) {
-            return false
-        }
-
-        if (!props.data.forms) {
-            return false
-        }
-        let form = props.data.forms.filter((item) => item.name === props.formSelected && item.project === props.projectSelected)
-
-        if (form.length !== 1) {
-            return false
-        }
-
-        if (form[0].draft === true) {
-            return true
-
-        }
-        if (form[0].draft === false) {
-            return false
-        }
-        return false
-
-    }
 
     // Check if a code for the form should be rendered
 
     const renderODKFormCode = CheckFormCode({
         data: props.data,
         formSelected: props.formSelected,
-        projectSelected: props.projectSelected
+        projectSelected: props.projectSelected,
+        draftOrLive: props.draftOrLive
     })
 
 
     const projectManagerOfForm = CheckProjectManager({
         data: props.data,
         projectSelected: props.projectSelected
+
     })
 
 
     const odkConf = CheckODKConf({
         data: props.data,
         projectSelected: props.projectSelected,
-        formSelected: props.formSelected
+        formSelected: props.formSelected,
+        draftOrLive: props.draftOrLive
+
     })
 
     const encoded_settings = CheckEncodedSettings({
         data: props.data,
         projectSelected: props.projectSelected,
-        formSelected: props.formSelected
-    })
+        formSelected: props.formSelected,
+        draftOrLive: props.draftOrLive
 
-    const draft = CheckDraft({
-        data: props.data,
-        projectSelected: props.projectSelected,
-        formSelected: props.formSelected
     })
+    console.log("odkConf")
+
+    console.log(odkConf)
+
+    let draft=false
+    let live=false 
+    if (props.draftOrLive=="draft"){
+        draft=true
+    }
+    if (props.draftOrLive=="live"){
+        live=true
+    }
 
     // Need to add data collecter as an option
     const stateToReturn = {
@@ -205,7 +193,9 @@ function SetInitialFormState(props) {
         projectManagerOfForm: projectManagerOfForm,
         odkConf: odkConf,
         encoded_settings: encoded_settings,
-        draft: draft
+        draft: draft,
+        live:live
+        
     }
     return stateToReturn
 }
@@ -215,6 +205,7 @@ function SetInitialFormState(props) {
 
 
 function CardBody(props) {
+    console.log("Card body props")
     console.log(props)
 
     return (
@@ -240,11 +231,9 @@ function CardBody(props) {
             {
                 props.formState.draft ? <>
 
-                    <br />
 
 
-                    < br />
-                    <Button className="bg-dark border-0" style={{ "margin": "10px" }}
+                    {/* <Button className="bg-dark border-0" style={{ "margin": "10px" }}
                         onClick={async () => {
                             await ProcessData({
                                 commandType: "generate",
@@ -257,12 +246,10 @@ function CardBody(props) {
                             console.log("Finished Generating Data")
                         }}
 
-                    >Generate Mock Submissions</Button>
+                    >Generate Mock Submissions</Button> */}
 
-                    <br />
-                    <p>*Your form is currently saved as a draft. Any submissions you make
-                        will be removed once the form is finalised. Mock submissions are a useful way to see what your
-                        data might look like, they will also be deleted once you finalise the form* </p>
+                    <p>*Your form is currently saved as a draft. Draft submissions you make
+                        will be removed once the form is finalised.* </p>
                 </>
                     : <></>
             }
@@ -280,6 +267,8 @@ export default function DataCollectionComponent() {
 
     const projectSelected = useParams().projectName
     const formSelected = useParams().formName
+    const draftOrLive = useParams().draftOrLive
+  
 
     const [renderInstallCode, setRenderInstallCode] = useState(false)
     const [renderODKFormCode, setRenderODKFormCode] = useState(true)
@@ -296,6 +285,7 @@ export default function DataCollectionComponent() {
         odkConf: false,
         encoded_settings: false,
         draft: false,
+        live:false,
         data:{
             forms:[],
             users:[],
@@ -314,6 +304,7 @@ export default function DataCollectionComponent() {
             })
         }
 
+
         FetchUserInfo()
         
     }, [])
@@ -322,7 +313,8 @@ export default function DataCollectionComponent() {
         const new_form_state = SetInitialFormState({
             data: adminData,
             formSelected: formSelected,
-            projectSelected: projectSelected
+            projectSelected: projectSelected,
+            draftOrLive: draftOrLive
         })
 
         console.log("Setting initial state")
