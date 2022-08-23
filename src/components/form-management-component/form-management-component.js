@@ -262,7 +262,6 @@ function FormOptions(props) {
               </button>
             </form>
 
-            <DropdownItem>Finalise</DropdownItem>
           </>
         ) : (
           <></>
