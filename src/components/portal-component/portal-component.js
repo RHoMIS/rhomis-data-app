@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom';
 import AuthContext from '../authentication-component/AuthContext';
 import {MdHelpOutline} from 'react-icons/md'
 
-import {MainCard} from '../main-card-component/main-card-component'
+import MainCard from '../main-card-component/main-card-component'
 
 import axios from 'axios';
 
@@ -31,7 +31,6 @@ import { PortalDataAll } from './portal-data'
 
 import './portal-component.css'
 import '../../App.css'
-
 
 
 
@@ -194,28 +193,23 @@ export default function PortalComponent() {
     }, [])
 
     return (
-        <div className="sub-page-container">
-            <Card className="main-card border-0">
-                <Card.Header className="bg-dark text-white">
-                <div className="main-card-header-container">
-                    <h3 >Portal</h3>
-                    <div
-              style={{
-                display: "flex",
-                "flex-direction": "row",
-                "margin-left": "auto",
-              }}>
-                   <MdHelpOutline size={30} style={{"color":"white"}}/>
-                   </div>
-                   </div>
-                </Card.Header>
-                <Card.Body className="main-card-body">
-                    <RenderPortalCards data={PortalDataAll} userData={userData} authToken={authToken} />
+        <MainCard
+    
+    CardTitle="Form Overview"
+    filters={[]}
+    history={null}
+    CardBody={
+        RenderPortalCards({
+            data:PortalDataAll,
+            userData:userData, 
+            authToken:authToken})
 
-                </Card.Body>
-            </Card>
+      }    
+    >
+    </MainCard>
 
-        </div >
+
+        
     )
 
 }

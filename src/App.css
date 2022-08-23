@@ -32,6 +32,7 @@
 }
 
 
+
 .main-card{
   margin-top: 25px;
   margin-bottom: 25px;
@@ -41,6 +42,14 @@
 .main-card-header-container{
   display: flex;
   align-items: center; 
+  vertical-align: center;
+}
+
+.main-card-header{
+  align-self: center;
+  margin-top: 7px;
+  margin-left: 8px;
+
 }
 
 .main-card-header-item{

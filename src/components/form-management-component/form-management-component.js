@@ -16,9 +16,7 @@ import { useHistory } from "react-router";
 
 import { AiOutlineArrowLeft } from "react-icons/ai";
 
-import QRCode from "react-qr-code";
-import { deflateSync } from "zlib";
-import DropdownItem from "react-bootstrap/esm/DropdownItem";
+import MainCard from "../main-card-component/main-card-component";
 
 /*
  Format date so it appears correctly 
@@ -472,7 +470,7 @@ function FormManagementComponent() {
   console.log(adminData);
 
   const [formSelected, setFormSelected] = useState(null);
-  const [filters, setFilters] = useState(null);
+  const [filters, setFilters] = useState([]);
   const data = null;
 
   useEffect(() => {
@@ -493,43 +491,30 @@ function FormManagementComponent() {
   }, []);
 
   return (
-    <div id="project-management-container" className="sub-page-container">
-      <Card className="main-card border-0">
-        <Card.Header className=" bg-dark text-white">
-          <div className="main-card-header-container">
-            <h3>Form Overview</h3>
-            <div
-              style={{
-                display: "flex",
-                "flex-direction": "row",
-                "margin-left": "auto",
-              }}>
-              <div className="main-card-header-item">{projectSelected}</div>
-              <Button
-                className="bg-dark border-0"
-                onClick={() => {
-                  history.push("/projects");
-                }}>
-                <AiOutlineArrowLeft size={25} />
-              </Button>
-            </div>
-          </div>
-        </Card.Header>
-        <Card.Body className="main-card-body">
-          <RenderProjectAdmin
-            authToken={authToken}
-            projectSelected={projectSelected}
-            formSelected={formSelected}
-            setAdminData={setAdminData}
-            data={adminData}
-            setFormSelected={setFormSelected}
-            filters={filters}
-            setFilters={setFilters}
-            submissionsLoading={submissionsLoading}
-          />
-        </Card.Body>
-      </Card>
-    </div>
+<>
+    <MainCard
+    
+    CardTitle="Form Overview"
+    filters={[projectSelected]}
+    history={history}
+    back_link={"/projects"}
+    CardBody={
+      RenderProjectAdmin({
+          authToken:authToken,
+            projectSelected:projectSelected,
+            formSelected:formSelected,
+            setAdminData:setAdminData,
+            data:adminData,
+            setFormSelected:setFormSelected,
+            filters:filters,
+            setFilters:setFilters,
+            submissionsLoading:submissionsLoading
+        })}    
+    >
+    </MainCard>
+
+
+    </>
   );
 }
 

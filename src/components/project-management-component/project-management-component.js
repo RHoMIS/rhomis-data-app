@@ -131,33 +131,20 @@ export default function ProjectManagementComponent(props) {
 
 
     return (
-        <div id="project-management-container" className="sub-page-container">
+        <>
 
-            <Card className="main-card border-0">
-                <Card.Header className=" bg-dark text-white">
-                    <div className="main-card-header-container">
-                        <h3>Select a Project</h3>
-                        <div style={{ "display": "flex", "flex-direction": "row", "margin-left": "auto" }} >
-                         
-                                 
-                                <Button className="bg-dark border-0" onClick={() => {
-                                    history.push("/")
-
-                                }
-                                }><AiOutlineArrowLeft size={25} /></Button>
-                        </div>
-                    </div>
-
-
-                </Card.Header>
-
-                <Card.Body className="main-card-body">
-                    <RenderProjectInformation data={adminData} setProjectSelected={setProjectSelected}  />
-
-
-
-                </Card.Body>
-            </Card >
-        </div >
+<MainCard
+    
+    CardTitle="Select a Project"
+    filters={[]}
+    history={history}
+    back_link={"/"}
+    CardBody={
+        RenderProjectInformation({data:adminData, setProjectSelected:setProjectSelected})
+     }    
+    >
+    </MainCard>
+        
+        </>
     )
 }

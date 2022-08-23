@@ -25,6 +25,8 @@ import axios from "axios";
 import { Store } from "react-notifications-component";
 import { style } from "@mui/system";
 
+import MainCard from "../main-card-component/main-card-component";
+
 import "./data-access-component.css"
 
 async function FetchData(props) {
@@ -672,6 +674,22 @@ function generateDataDownloadLink(dataToDownload, dataDownloadLink) {
   return window.URL.createObjectURL(data);
 }
 
+
+function RenderSpinner(){
+  return(
+    <>
+     <Spinner
+              as="span"
+              animation="border"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            </>
+
+  )
+}
+
 async function CheckFormData(props) {
   if (props.formData.unitsExtracted == true) {
     // Extract Units
@@ -790,58 +808,35 @@ export default function DataAccessComponent() {
   }, [formData]);
 
   return (
-    <div id="project-management-container" className="sub-page-container">
-      <Card className="main-card border-0">
-        <Card.Header className=" bg-dark text-white">
-          <div className="main-card-header-container">
-            <h3>Data</h3>
 
-            <div
-              style={{
-                display: "flex",
-                "flex-direction": "row",
-                "margin-left": "auto",
-              }}
-            >
-              <div className="main-card-header-item">{projectSelected}</div>
-              <div className="main-card-header-item">{formSelected}</div>
+    <>
 
-              <Button
-                className="bg-dark border-0"
-                onClick={() => {
-                  history.push("/projects/" + projectSelected);
-                }}
-              >
-                <AiOutlineArrowLeft size={25} />
-              </Button>
-            </div>
-          </div>
-        </Card.Header>
-        <Card.Body>
-          {loading ? (
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-          ) : (
-            <RenderDataCard
-              authToken={authToken}
-              formData={formData}
-              projectSelected={projectSelected}
-              formSelected={formSelected}
-              showUnits={showUnits}
-              userInfo={adminData}
-              showPrices={showPrices}
-              showOutputs={showOutputs}
-              setAuthToken={setAuthToken}
-              setFormData={setFormData}
-            />
-          )}
-        </Card.Body>
-      </Card>
-    </div>
+    <MainCard
+    
+    CardTitle="Data"
+    filters={[projectSelected, formSelected]}
+    history={history}
+    back_link={"/projects/" + projectSelected}
+    CardBody={
+      loading ? 
+      RenderSpinner()
+       : 
+        RenderDataCard({
+          authToken:authToken,
+          formData:formData,
+          projectSelected:projectSelected,
+          formSelected:formSelected,
+          showUnits:showUnits,
+          userInfo:adminData,
+          showPrices:showPrices,
+          showOutputs:showOutputs,
+          setAuthToken:setAuthToken,
+          setFormData:setFormData
+        })
+       
+     }    
+    >
+    </MainCard>
+    </>
   );
 }

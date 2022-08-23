@@ -15,6 +15,8 @@ import { deflateSync } from 'zlib'
 
 import axios from 'axios'
 
+import MainCard from '../main-card-component/main-card-component'
+
 
 async function ProcessData(props) {
     console.log(props)
@@ -327,40 +329,23 @@ export default function DataCollectionComponent() {
     }, [adminData])
 
     return (
-        <div id="project-management-container" className="sub-page-container">
+        
 
-            <Card className="main-card border-0">
-                <Card.Header className=" bg-dark text-white">
-                    <div className="main-card-header-container">
-                        <h3>Collect Data</h3>
-
-                        <div style={{ "display": "flex", "flex-direction": "row", "margin-left": "auto" }} >
-                            <div className="main-card-header-item">{projectSelected}</div>
-                            <div className="main-card-header-item">{formSelected}</div>
-
-                            <Button className="bg-dark border-0" onClick={() => {
-                                history.push("/projects/" + projectSelected)
-
-                            }}>
-                                <AiOutlineArrowLeft size={25} />
-                            </Button>
-                        </div>
-                    </div>
-
-                </Card.Header>
-                <Card.Body className="main-card-body">
-
-
-
-                    <CardBody formState={initialState} 
-                    data={adminData}
-                    authToken={authToken}
-                    formSelected={formSelected}
-                    projectSelected={projectSelected}/>
-
-                </Card.Body>
-            </Card>
-        </div >
+<MainCard
+    
+    CardTitle="Collect Data"
+    filters={[projectSelected, formSelected]}
+    history={history}
+    back_link={"/projects/" + projectSelected}
+    CardBody={
+        CardBody({formState:initialState, 
+        data:adminData,
+        authToken:authToken,
+        formSelected:formSelected,
+        projectSelected:projectSelected})
+     }    
+    >
+    </MainCard>
 
     )
 }
