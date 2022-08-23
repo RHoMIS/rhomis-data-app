@@ -64,7 +64,7 @@ export const PortalDataAll = [
         label: "help",
         text: "See guidance for more advanced use case and how to contribute to our system",
         icon: MdHelpOutline,
-        link: "https://l-gorman.github.io/rhomis-docs/source/user-guide/first-time-user.html#rhomis-portal",
+        link: process.env.REACT_APP_DOCS + "source/user-guide/first-time-user.html#rhomis-portal",
         external: true,
     },
     {

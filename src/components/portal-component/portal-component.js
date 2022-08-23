@@ -19,6 +19,9 @@ import React, { Component, useState, useEffect, useContext } from 'react'
 import { Form, Card, Table, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import AuthContext from '../authentication-component/AuthContext';
+import {MdHelpOutline} from 'react-icons/md'
+
+import {MainCard} from '../main-card-component/main-card-component'
 
 import axios from 'axios';
 
@@ -194,7 +197,17 @@ export default function PortalComponent() {
         <div className="sub-page-container">
             <Card className="main-card border-0">
                 <Card.Header className="bg-dark text-white">
+                <div className="main-card-header-container">
                     <h3 >Portal</h3>
+                    <div
+              style={{
+                display: "flex",
+                "flex-direction": "row",
+                "margin-left": "auto",
+              }}>
+                   <MdHelpOutline size={30} style={{"color":"white"}}/>
+                   </div>
+                   </div>
                 </Card.Header>
                 <Card.Body className="main-card-body">
                     <RenderPortalCards data={PortalDataAll} userData={userData} authToken={authToken} />
