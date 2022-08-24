@@ -817,6 +817,8 @@ export default function DataAccessComponent() {
     filters={[projectSelected, formSelected]}
     history={history}
     back_link={"/projects/" + projectSelected}
+    doc_extension="source/user-guide/navigating-the-app.html#data-access"
+
     CardBody={
       loading ? 
       RenderSpinner()

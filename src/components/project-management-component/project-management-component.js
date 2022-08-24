@@ -139,6 +139,8 @@ export default function ProjectManagementComponent(props) {
     filters={[]}
     history={history}
     back_link={"/"}
+    doc_extension="source/user-guide/navigating-the-app.html#project-management"
+
     CardBody={
         RenderProjectInformation({data:adminData, setProjectSelected:setProjectSelected})
      }    

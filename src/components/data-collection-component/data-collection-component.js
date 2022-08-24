@@ -337,6 +337,8 @@ export default function DataCollectionComponent() {
     filters={[projectSelected, formSelected]}
     history={history}
     back_link={"/projects/" + projectSelected}
+    doc_extension="source/user-guide/navigating-the-app.html#data-collection"
+
     CardBody={
         CardBody({formState:initialState, 
         data:adminData,

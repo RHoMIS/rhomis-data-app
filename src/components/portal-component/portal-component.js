@@ -195,9 +195,10 @@ export default function PortalComponent() {
     return (
         <MainCard
     
-    CardTitle="Form Overview"
+    CardTitle="Home"
     filters={[]}
     history={null}
+    doc_extension="source/user-guide/first-time-user.html#rhomis-portal"
     CardBody={
         RenderPortalCards({
             data:PortalDataAll,

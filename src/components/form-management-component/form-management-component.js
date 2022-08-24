@@ -497,7 +497,8 @@ function FormManagementComponent() {
     CardTitle="Form Overview"
     filters={[projectSelected]}
     history={history}
-    back_link={"/projects"}
+    back_link="/projects"
+    doc_extension="source/user-guide/navigating-the-app.html#form-overview"
     CardBody={
       RenderProjectAdmin({
           authToken:authToken,
