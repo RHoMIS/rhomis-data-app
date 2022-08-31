@@ -30,7 +30,7 @@ export const PortalDataAll = [
         external: true,
     },
     {
-        name: "Manage Existing Projects",
+        name: "Manage Projects",
         label: "projectManager",
         text: "Check up on your projects, download your data, and control user access.",
         icon: MdOutlineDashboardCustomize,
