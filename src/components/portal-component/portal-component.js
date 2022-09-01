@@ -19,6 +19,9 @@ import React, { Component, useState, useEffect, useContext } from 'react'
 import { Form, Card, Table, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom';
 import AuthContext from '../authentication-component/AuthContext';
+import {MdHelpOutline} from 'react-icons/md'
+
+import MainCard from '../main-card-component/main-card-component'
 
 import axios from 'axios';
 
@@ -28,7 +31,6 @@ import { PortalDataAll } from './portal-data'
 
 import './portal-component.css'
 import '../../App.css'
-
 
 
 
@@ -191,18 +193,24 @@ export default function PortalComponent() {
     }, [])
 
     return (
-        <div className="sub-page-container">
-            <Card className="main-card border-0">
-                <Card.Header className="bg-dark text-white">
-                    <h3 >Portal</h3>
-                </Card.Header>
-                <Card.Body className="main-card-body">
-                    <RenderPortalCards data={PortalDataAll} userData={userData} authToken={authToken} />
+        <MainCard
+    
+    CardTitle="Home"
+    filters={[]}
+    history={null}
+    doc_extension="source/user-guide/first-time-user.html#rhomis-portal"
+    CardBody={
+        RenderPortalCards({
+            data:PortalDataAll,
+            userData:userData, 
+            authToken:authToken})
 
-                </Card.Body>
-            </Card>
+      }    
+    >
+    </MainCard>
 
-        </div >
+
+        
     )
 
 }

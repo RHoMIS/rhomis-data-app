@@ -18,7 +18,6 @@
 import React, { useContext, useEffect, useState} from 'react'
 
 import { Login, LoginComponent } from "../login-component/login-component"
-import { DataQueryComponent } from "../data-query-component/data-query-component"
 import { RegisterComponent } from '../register-component/register-component';
 import PortalComponent from '../portal-component/portal-component';
 import NotFoundComponent from '../not-found-component/not-found-component';
@@ -115,7 +114,6 @@ function AuthenticatedComponents(props){
 
 
 
-                <Route path="/data-querying" component={DataQueryComponent} />
                 <Route path="/administration" component={FormCreationComponent} />
 
                 {/* <Route path="*" component={NotFoundComponent} /> */}

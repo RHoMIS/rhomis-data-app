@@ -11,6 +11,8 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 
+import MainCard from '../main-card-component/main-card-component';
+
 function CheckProjectManager(props) {
 
 
@@ -262,35 +264,27 @@ export default function UserManagementComponent() {
 
 
     return (
-        <div id="project-management-container" className="sub-page-container">
+        
+        <>
+        <MainCard
+    
+        CardTitle="User Management"
+        filters={[projectSelected, formSelected]}
+        history={history}
+        back_link={"/projects/" + projectSelected}
+        doc_extension="source/user-guide/navigating-the-app.html#user-management"
+        CardBody={
 
-            <Card className="main-card border-0">
-                <Card.Header className=" bg-dark text-white">
-                    <div className="main-card-header-container">
-                        <h3>User Management</h3>
+            UserForm({
+            projectSelected:projectSelected,
+            formSelected:formSelected,
+            projectManagerOfForm:projectManagerOfForm,
+            authToken:authToken})}
+       
+    />
+        
 
-                        <div style={{ "display": "flex", "flex-direction": "row", "margin-left": "auto" }} >
-                            <div className="main-card-header-item">{projectSelected}</div>
-                            <div className="main-card-header-item">{formSelected}</div>
-
-                            <Button className="bg-dark border-0" onClick={() => {
-                                history.push("/projects/" + projectSelected)
-
-                            }}>
-                                <AiOutlineArrowLeft size={25} />
-                            </Button>
-                        </div>
-                    </div>
-                </Card.Header>
-                <Card.Body className="main-card-body">
-                    <UserForm
-                        projectSelected={projectSelected}
-                        formSelected={formSelected}
-                        projectManagerOfForm={projectManagerOfForm}
-                        authToken={authToken} />
-
-                </Card.Body>
-            </Card>
-        </div >
+       
+        </>
     )
 }
