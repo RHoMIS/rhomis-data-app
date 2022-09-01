@@ -8,7 +8,6 @@ export default function MainCard(props, {children}){
 
     /* Expecting the arguments
     CardTitle: The title you want for the card
-    HelpLink: The link to the help documentation for this section
     CardBody: The card Body
     filters:
     history: the history of the component
