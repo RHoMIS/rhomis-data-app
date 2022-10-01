@@ -19,7 +19,7 @@ name: Deploy staging
 on:
   push:
     branches:
-      - main
+      - staging
 
 jobs:
   build:
