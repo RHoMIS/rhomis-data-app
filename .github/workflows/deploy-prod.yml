@@ -55,6 +55,7 @@ jobs:
           git add -A
           git config --local user.email "lgorman@turing.ac.uk"
           git config --local user.name "l-gorman"
+          git config --global --add safe.directory /github/workspace/build
           git commit -m 'deploy'
 
       - name: Force push to destination branch
