@@ -400,9 +400,18 @@ async function ProcessData(props) {
 
 function RenderUnitsForm(props) {
   return (
-    <Card style={{ "marginTop": "30px" }}>
+    <Card style={{ "marginTop": "30px", "width":'100%' }}>
       <Card.Header>Units</Card.Header>
       <Card.Body>
+        Here you can provide numeric conversion factors 
+        for any values which were recorded in the survey
+
+        The units you enter here will be used to calculate
+        key indicators, such as income. For more information
+        on converting units, click here
+<br/>
+<br/>
+
         <ShowUnitsForm {...props}
         formType='units' 
         formLabel="Select the type of unit"
@@ -418,7 +427,7 @@ function RenderUnitsForm(props) {
 
 function RenderPriceAndCalorieConversions(props) {
   return (
-    <Card style={{ "marginTop": "30px" }}>
+    <Card style={{ "marginTop": "30px", "width":'100%'  }}>
       <Card.Header>Prices and Calories</Card.Header>
       <Card.Body>
       <ShowUnitsForm {...props}
@@ -439,10 +448,12 @@ function RenderFinalOutputs(props) {
   const [rhomisData, setRHoMISData] = useState(null)
   const [dataDownloadLink, setDataDownloadLink] = useState('')
   return (
-    <Card style={{ "margin-top": "30px" }}>
+    <Card style={{ "margin-top": "30px" , "width":'100%'  }}>
       <Card.Header>Final Outputs</Card.Header>
 
       <Card.Body>
+
+
                         <Form>
                             <Form.Group>
                                 <Form.Label>Select the type of data</Form.Label>

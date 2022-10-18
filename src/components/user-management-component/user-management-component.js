@@ -263,6 +263,7 @@ export default function UserManagementComponent() {
         console.log("project manager")
         console.log(projectManager)
         setProjectManagerOfForm(projectManager)
+        
     },[authToken])
 
     useEffect(() => {
