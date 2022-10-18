@@ -11,6 +11,7 @@ import {
   FormControl,
 } from "react-bootstrap";
 import { AiOutlineArrowLeft } from "react-icons/ai";
+import {TiTickOutline} from 'react-icons/ti'
 import { useParams, useHistory } from "react-router-dom";
 
 import AuthContext from "../authentication-component/AuthContext";
@@ -219,6 +220,8 @@ function ShowUnitsForm(props) {
     "honey_calories",
     "meat_calories",
     "staple_crop",
+    "livestock_weight_kg",
+    "livestock_count_to_tlu"
   ];
   useEffect(() => {
     console.log("Units");
@@ -339,7 +342,9 @@ function ShowUnitsForm(props) {
               <Button
                 className="bg-dark border-0"
                 onClick={async () => {
+                  props.setLoading(true)
                   await ProcessData({
+
                     commandType: props.commandType,
                     formSelected: props.formSelected,
                     projectSelected: props.projectSelected,
@@ -356,6 +361,8 @@ function ShowUnitsForm(props) {
                     formName: props.formSelected,
                     setFormData: props.setFormData,
                   });
+                  props.setLoading(false)
+
                 }}>
                 {props.submissionLabel}
               </Button>
@@ -374,16 +381,18 @@ async function ProcessData(props) {
   )[0];
 
   Store.addNotification({
-    title: "Processing data",
+    id: 'notification-start',
+    title: props.process_label + " Started",
+    message: "Please wait",
     type: "default",
     insert: "top",
     container: "top-right",
     animationIn: ["animate__animated", "animate__fadeIn"],
     animationOut: ["animate__animated", "animate__fadeOut"],
-    dismiss: {
-      duration: 2000,
-    },
+   
   });
+
+  
   try {
     const result = await axios({
       method: "post",
@@ -404,7 +413,7 @@ async function ProcessData(props) {
       Store.addNotification({
         title: "Success",
         message: props.process_label + " Completed",
-        type: "success",
+        type: "default",
         insert: "top",
         container: "top-right",
         animationIn: ["animate__animated", "animate__fadeIn"],
@@ -413,6 +422,8 @@ async function ProcessData(props) {
           duration: 2000,
         },
       });
+
+      Store.removeNotification('notification-start')
     }
     return true;
   } catch (err) {
@@ -424,19 +435,27 @@ async function ProcessData(props) {
       insert: "top",
       container: "top-right",
       animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 2000,
-      },
+      animationOut: ["animate__animated", "animate__fadeOut"]
+  
     });
     return false;
   }
 }
 
 function RenderUnitsForm(props) {
+  let background_color = ''
+  let text_color = 'black'
+  let show_tick = false
+  if (props.showPrices===true){
+    background_color = '#4B5320'
+    text_color = 'white'
+    show_tick = true
+  }
+
+
   return (
     <Card style={{ marginTop: "30px", width: "100%" }}>
-      <Card.Header>Units (Data Cleaning)</Card.Header>
+      <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>{show_tick? <><TiTickOutline/> Units and Data Cleaning (Completed)</>:'Units and Data Cleaning'}</Card.Header>
       <Card.Body>
         Here you can provide conversion factors for any values which
         were recorded in the survey The units you enter here will be used to
@@ -475,9 +494,21 @@ function RenderUnitsForm(props) {
 }
 
 function RenderPriceAndCalorieConversions(props) {
+  let background_color = ''
+  let text_color = 'black'
+  let show_tick = false
+  if (props.showOutputs===true){
+    background_color = '#4B5320'
+    text_color = 'white'
+    show_tick = true
+  }
+
+
+    
+
   return (
     <Card style={{ marginTop: "30px", width: "100%" }}>
-      <Card.Header>Prices and Calories (Conversion Verification)</Card.Header>
+    <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>{show_tick? <><TiTickOutline/> Prices and Calorie Conversion Verification (Completed) </>:'Prices and Calorie Conversion Verification'}</Card.Header>
       <Card.Body>
         Here you can provide numeric conversion factors for any values which
         were recorded in the survey The units you enter here will be used to
@@ -517,9 +548,20 @@ function RenderFinalOutputs(props) {
   const [rhomisDataSelect, setRHoMISSelect] = useState(null);
   const [rhomisData, setRHoMISData] = useState(null);
   const [dataDownloadLink, setDataDownloadLink] = useState("");
+
+
+  let background_color = '#4B5320'
+  let text_color = 'white'
+  
+
+
+    
+
+ 
+
   return (
     <Card style={{ "margin-top": "30px", width: "100%" }}>
-      <Card.Header>Final Outputs</Card.Header>
+      <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>Final Outputs</Card.Header>
 
       <Card.Body>
         <Form>
@@ -814,8 +856,8 @@ function RenderSpinner() {
       <Spinner
         as="span"
         animation="border"
-        size="sm"
-        role="status"
+        style={{ 'margin-top':'4em','width': "4rem", 'height': "4rem" }}
+                role="status"
         aria-hidden="true"
       />
     </>
@@ -828,19 +870,17 @@ async function CheckFormData(props) {
     props.setShowUnits(true);
   }
   if (props.formData.unitsExtracted == false) {
-    Store.addNotification({
-      title: "Extracting Units",
-      message: "Please wait while we extract units from the dataset",
-      type: "success",
-      insert: "top",
-      container: "top-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 2000,
-      },
-    });
-
+    // Store.addNotification({
+    //   id: 'unit_extraction',
+    //   title: "Extracting Units",
+    //   message: "Please wait while we extract units from the dataset",
+    //   type: "default",
+    //   insert: "top",
+    //   container: "top-right",
+    //   animationIn: ["animate__animated", "animate__fadeIn"],
+    //   animationOut: ["animate__animated", "animate__fadeOut"],
+    // });
+    props.setLoading(true)
     const processing_result = await ProcessData({
       commandType: "units",
       formSelected: props.formSelected,
@@ -848,6 +888,7 @@ async function CheckFormData(props) {
       process_label: "Unit Extraction",
       data: props.data,
       authToken: props.authToken,
+      setLoading: props.setLoading
     });
 
     if (processing_result === true) {
@@ -859,6 +900,11 @@ async function CheckFormData(props) {
         formName: props.formSelected,
         setFormData: props.setFormData,
       });
+      props.setLoading(false)
+
+      
+      Store.removeNotification('unit_extraction')
+
     }
   }
 
@@ -928,6 +974,7 @@ export default function DataAccessComponent() {
   useEffect(() => {
     console.log("Form Data");
     console.log(formData);
+    
     async function CheckAndUpdateFormInformation() {
       await CheckFormData({
         setAuthToken: setAuthToken,
@@ -945,6 +992,7 @@ export default function DataAccessComponent() {
         setShowUnits: setShowUnits,
         setShowPrices: setShowPrices,
         setShowOutputs: setShowOutputs,
+        setLoading: setLoading
       });
     }
 
@@ -973,6 +1021,7 @@ export default function DataAccessComponent() {
                 showOutputs: showOutputs,
                 setAuthToken: setAuthToken,
                 setFormData: setFormData,
+                setLoading:setLoading,
                 doc_extension:
                   "source/user-guide/navigating-the-app.html#data-access",
               })
