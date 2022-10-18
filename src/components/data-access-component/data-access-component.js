@@ -16,7 +16,7 @@ import { useParams, useHistory } from "react-router-dom";
 import AuthContext from "../authentication-component/AuthContext";
 import UserContext from "../user-info-component/UserContext";
 
-import { FetchUserInformation } from "../fetching-context-info/fetching-context-info";
+import { FetchUserInformation, CheckForLocalToken } from '../fetching-context-info/fetching-context-info';
 
 import { GetInformationForFormComponent } from "../fetching-context-info/fetching-context-info";
 
@@ -763,6 +763,24 @@ export default function DataAccessComponent() {
 
 
   useEffect(() => {
+
+    async function CheckLoggedIn(){
+      const logged_in = await CheckForLocalToken({
+        setAuthToken: setAuthToken
+      }
+      )
+      if (logged_in==false){
+        history.push("/logout")
+      }
+    }
+
+    CheckLoggedIn()
+
+   
+  }, []);
+
+  useEffect(async () => {
+    console.log("getting user info")
     async function GetUserInfo() {
       await GetInformationForFormComponent({
         setAuthToken: setAuthToken,
@@ -779,7 +797,7 @@ export default function DataAccessComponent() {
       // })
     }
     GetUserInfo();
-  }, []);
+},[authToken])
 
   useEffect(() => {
     console.log("Form Data");
@@ -802,9 +820,12 @@ export default function DataAccessComponent() {
         setShowPrices: setShowPrices,
         setShowOutputs: setShowOutputs,
       });
+
+      
+
     }
 
-    CheckAndUpdateFormInformation();
+  CheckAndUpdateFormInformation();
   }, [formData]);
 
   return (

@@ -29,6 +29,8 @@ import { Redirect, useHistory } from 'react-router';
 
 import { PortalDataAll } from './portal-data'
 
+import {CheckForLocalToken} from '../fetching-context-info/fetching-context-info'
+
 import './portal-component.css'
 import '../../App.css'
 
@@ -183,14 +185,29 @@ export default function PortalComponent() {
 
     const [userData, setUserData] = useState(null)
     const [useInfoAvail, setUserInfoAvail] = useState(false)
+    const history= useHistory()
     const [authToken, setAuthToken] = useContext(AuthContext)
 
     useEffect(async () => {
-        const newUserData = await FetchProjectInformation(authToken
-        )
+        async function CheckLoggedIn(){
+            const logged_in = await CheckForLocalToken({
+              setAuthToken: setAuthToken
+            }
+            )
+            if (logged_in==false){
+              history.push("/logout")
+            }
+          }
+      
+          CheckLoggedIn()
+        
+    }, [])
+
+    useEffect(async () => {
+        const newUserData = await FetchProjectInformation(authToken)
         setUserData(newUserData)
         setUserInfoAvail(true)
-    }, [])
+    },[authToken])
 
     return (
         <MainCard

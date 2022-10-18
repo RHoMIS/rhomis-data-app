@@ -27,6 +27,8 @@ import "./register-component.css"
 import ReCAPTCHA from "react-google-recaptcha";
 import PasswordStrengthBar from 'react-password-strength-bar';
 
+import AuthContext from '../authentication-component/AuthContext'
+import { CheckForLocalToken } from '../fetching-context-info/fetching-context-info'
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -299,10 +301,21 @@ async function RegisterUser(props) {
 
 function RegisterComponent(props) {
     const [open, setOpen] = useState(false)
-
-    useEffect(() => {
-        setOpen(true)
+    const [authToken,setAuthToken]=useContext(AuthContext)
+    const history=useHistory()
+    useEffect(async () => {
+       
+            setAuthToken(null)
+            localStorage.clear()
+            
+      
+        
     }, [])
+
+    useEffect(async () => {
+        setOpen(true)
+
+    },[authToken])
 
     return (
         <Fade in={open}>

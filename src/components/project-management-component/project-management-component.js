@@ -122,12 +122,30 @@ export default function ProjectManagementComponent(props) {
 
     const [projectSelected, setProjectSelected] = useState(false)
     useEffect(async () => {
+        async function CheckLoggedIn(){
+            const logged_in = await CheckForLocalToken({
+              setAuthToken: setAuthToken
+            }
+            )
+            if (logged_in==false){
+              history.push("/logout")
+            }
+          }
+      
+          CheckLoggedIn()
+        
+    }, [])
+
+    useEffect(async () => {
         console.log("Effect running")
         await FetchUserInformation({
             authToken: authToken,
             setUserInfo: setAdminData
         })
-    }, [])
+    },[authToken])
+
+
+ 
 
 
     return (

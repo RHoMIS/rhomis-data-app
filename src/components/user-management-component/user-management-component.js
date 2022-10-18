@@ -11,6 +11,8 @@ import { useHistory, useParams } from 'react-router-dom'
 
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 
+import { CheckForLocalToken } from '../fetching-context-info/fetching-context-info';
+
 import MainCard from '../main-card-component/main-card-component';
 
 function CheckProjectManager(props) {
@@ -238,6 +240,31 @@ export default function UserManagementComponent() {
     console.log("Admin data")
     console.log(adminData)
 
+    useEffect(async () => {
+        async function CheckLoggedIn(){
+            const logged_in = await CheckForLocalToken({
+              setAuthToken: setAuthToken
+            }
+            )
+            if (logged_in==false){
+              history.push("/logout")
+            }
+          }
+      
+          CheckLoggedIn()
+        
+    }, [])
+
+    useEffect(async () => {
+        const projectManager = CheckProjectManager({
+            data: adminData,
+            projectSelected: projectSelected
+        })
+        console.log("project manager")
+        console.log(projectManager)
+        setProjectManagerOfForm(projectManager)
+    },[authToken])
+
     useEffect(() => {
 
         const projectManager = CheckProjectManager({
@@ -250,17 +277,7 @@ export default function UserManagementComponent() {
 
     }, [adminData])
 
-    useEffect(() => {
 
-        const projectManager = CheckProjectManager({
-            data: adminData,
-            projectSelected: projectSelected
-        })
-        console.log("project manager")
-        console.log(projectManager)
-        setProjectManagerOfForm(projectManager)
-
-    }, [])
 
 
     return (

@@ -50,9 +50,11 @@ import { FetchUserInformation, CheckForLocalToken } from '../fetching-context-in
 export default function RoutingComponent() {
 
     const [authToken, setAuthToken] = useContext(AuthContext)
+    const [userInfo, setUserInfo] = useContext(UserContext)
 
     const [loading, setLoading] = useState(false)
     const [authenticated, setAuthenticated] = useState(null)
+
 
     // const [userInfo, setUserInfo] = useContext(UserContext)
     const history = useHistory()
@@ -64,41 +66,22 @@ export default function RoutingComponent() {
         })
     }, [])
 
-
-
-
-    // useEffect(() => {
-    //     FetchUserInformation({
-    //         authToken: authToken,
-    //         setUserInfo: setUserInfo
-    //     })
-    // }, [authToken])
+    useEffect(() => {
+        if(authToken===null){
+            setAuthenticated(false)
+        }else{
+            setAuthenticated(true)
+        }
+    }, [authToken])
 
 
 
 
-    console.log("Auth token context")
-    console.log(authToken)
 
   
-        if (authToken) {
-           return(<AuthenticatedComponents authToken={authToken} />)
-        }
-    
-        if (!authToken) {
-            return ( <PublicComponents authToken={authToken} />)
-        }
-    
-    
-   
-    
-
-}
-
-function AuthenticatedComponents(props){
-    return (
-        < Router >
-                    <MainNavbar />
+        return(
+            < Router >
+                    {authenticated? <MainNavbar />:<></>}
 
             <Switch>
 
@@ -116,7 +99,9 @@ function AuthenticatedComponents(props){
                 <Route path="/administration" component={FormCreationComponent} />
                 <Route path="/logout" component={LogoutComponent} />
 
-                
+                <Route path="/login"><LoginComponent /></Route>
+                <Route path="/register"><RegisterComponent /></Route>
+
 
                 {/* <Route path="*" component={NotFoundComponent} /> */}
                 <Redirect from="*" to="/home" />
@@ -125,36 +110,11 @@ function AuthenticatedComponents(props){
             {/* </Fade> */}
 
         </Router >
-    )
-
-}
-
-
-function PublicComponents(props){
-
-    // const history = useHistory()
-
-    // useEffect(()=>{
-    //     history.push("/login")
-    // })
+        )
     
-    return (
-        < Router >
-            {/* <Fade> */}
-            <Switch>
-                <Route exact path="/">
-                    <Redirect from="/" to="/login" />
-                </Route>
-                <Route path="/login"><LoginComponent /></Route>
+    
+   
+    
 
-                <Route path="/register"><RegisterComponent /></Route>
-                {/* <Redirect from="*" to="/login" /> */}
-
-            </Switch >
-            {/* </Fade> */}
-
-        </Router >
-    )
 }
-
 

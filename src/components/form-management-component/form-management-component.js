@@ -12,6 +12,8 @@ import "../project-management-component/project-management-component.css";
 import "./form-management-component.css";
 import "../../App.css";
 
+import {CheckForLocalToken} from '../fetching-context-info/fetching-context-info'
+
 import { useHistory } from "react-router";
 
 import { AiOutlineArrowLeft } from "react-icons/ai";
@@ -473,7 +475,25 @@ function FormManagementComponent() {
   const [filters, setFilters] = useState([]);
   const data = null;
 
+
   useEffect(() => {
+
+    async function CheckLoggedIn(){
+      const logged_in = await CheckForLocalToken({
+        setAuthToken: setAuthToken
+      }
+      )
+      if (logged_in==false){
+        history.push("/logout")
+      }
+    }
+
+    CheckLoggedIn()
+
+   
+  }, []);
+
+  useEffect(async () => {
     console.log("projectSelected:  " + projectSelected);
 
     async function GetUserInfo() {
@@ -488,7 +508,10 @@ function FormManagementComponent() {
     }
 
     GetUserInfo();
-  }, []);
+},[authToken])
+
+
+  
 
   return (
 <>

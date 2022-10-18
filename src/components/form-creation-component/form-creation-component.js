@@ -24,6 +24,9 @@ import '../../App.css'
 import axios from 'axios'
 
 import AuthContext from '../authentication-component/AuthContext'
+import { useHistory } from 'react-router-dom'
+
+import {CheckForLocalToken} from '../fetching-context-info/fetching-context-info'
 
 async function GetProjectInformation(props) {
     console.log("authToken: ", props.authToken)
@@ -636,24 +639,40 @@ export default function FormCreationComponent() {
     const [newDraftFormName, setNewDraftFormName] = useState(null);
     const [newDraftFormVersion, setNewDraftFormVersion] = useState(null);
 
+    const history = useHistory()
 
     const [newAdmin, setNewAdmin] = useState(null)
 
     useEffect(() => {
 
-
+        async function CheckLoggedIn(){
+          const logged_in = await CheckForLocalToken({
+            setAuthToken: setAuthToken
+          }
+          )
+          if (logged_in==false){
+            history.push("/logout")
+          }
+        }
+    
+        CheckLoggedIn()
+    
+       
+      }, []);
+    
+      useEffect(async () => {
         async function GetUserInfo() {
-        await GetProjectInformation({ authToken: authToken, setProjectInformation: setProjectInformation })
-        // const response = await FetchUserInformation({
-        //     authToken: authToken,
-        //     setUserInfo: setAdminData
-        // })
+            await GetProjectInformation({ authToken: authToken, setProjectInformation: setProjectInformation })
+            // const response = await FetchUserInformation({
+            //     authToken: authToken,
+            //     setUserInfo: setAdminData
+            // })
+        }
+        GetUserInfo();
+    },[authToken])
+    
 
-
-    }
-
-    GetUserInfo()
-    }, [])
+  
 
 
     return (

@@ -5,7 +5,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import AuthContext from '../authentication-component/AuthContext'
 import UserContext from '../user-info-component/UserContext'
 
-import { GetInformationForFormComponent, Set } from '../fetching-context-info/fetching-context-info'
+import { GetInformationForFormComponent, Set, CheckForLocalToken} from '../fetching-context-info/fetching-context-info'
 
 import { FetchUserInformation } from '../fetching-context-info/fetching-context-info'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
@@ -298,7 +298,25 @@ export default function DataCollectionComponent() {
 
 
     useEffect(() => {
+        async function CheckLoggedIn(){
+            const logged_in = await CheckForLocalToken({
+              setAuthToken: setAuthToken
+            }
+            )
+            if (logged_in==false){
+              history.push("/logout")
+            }
+          }
+      
+          CheckLoggedIn()
+      
 
+       
+        
+    }, [])
+
+
+    useEffect(async () => {
         async function FetchUserInfo(){
             await FetchUserInformation({
                 authToken: authToken,
@@ -308,8 +326,8 @@ export default function DataCollectionComponent() {
 
 
         FetchUserInfo()
-        
-    }, [])
+    },[authToken])
+
 
     useEffect(() => {
         const new_form_state = SetInitialFormState({
