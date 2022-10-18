@@ -26,6 +26,8 @@ import FormManagementComponent from '../form-management-component/form-managemen
 import MainNavbar from '../navigation-bar/navigation-bar-component'
 import FormCreationComponent from '../form-creation-component/form-creation-component';
 
+import { LogoutComponent } from '../logout-component/logout-component';
+
 import DataCollectionComponent from '../data-collection-component/data-collection-component';
 import DataAccessComponent from '../data-access-component/data-access-component';
 import UserManagementComponent from '../user-management-component/user-management-component';
@@ -97,8 +99,10 @@ export default function RoutingComponent() {
 function AuthenticatedComponents(props){
     return (
         < Router >
-            <MainNavbar />
+                    <MainNavbar />
+
             <Switch>
+
                 <Route exact path="/">
                     <Redirect from="/" to="/home" />
                 </Route>
@@ -111,6 +115,9 @@ function AuthenticatedComponents(props){
                 <Route path="/projects" ><ProjectManagementComponent /></Route>
 
                 <Route path="/administration" component={FormCreationComponent} />
+                <Route path="/logout" component={LogoutComponent} />
+
+                
 
                 {/* <Route path="*" component={NotFoundComponent} /> */}
                 <Redirect from="*" to="/home" />

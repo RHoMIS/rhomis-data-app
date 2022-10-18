@@ -53,7 +53,7 @@ function CheckForLocalToken(props) {
     console.log("local_token is :" + localToken)
     if (!localToken) {
         props.setAuthToken(null)
-        return null
+        return false
     }
 
     const currentDate = new Date()
@@ -65,13 +65,15 @@ function CheckForLocalToken(props) {
     const timeDifference = currentDate.getTime() - localTokenCreationTime.getTime()
     if (timeDifference < 60 * 60 * 1000) {
         props.setAuthToken(localToken)
+        return true
+
     }
     if (timeDifference > 60 * 60 * 1000) {
         props.setAuthToken(null)
-        return null
+        return false
     }
 
-    return localToken
+    return false
 }
 
 

@@ -1,9 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom';
 import { Container, Navbar, Nav, Offcanvas, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import AuthContext from '../authentication-component/AuthContext';
 import { MdOutlineMenu } from 'react-icons/md'
-
+import {AiOutlineHome} from 'react-icons/ai'
 import axios from 'axios';
 
 import './navigation-bar-component.css'
@@ -56,6 +57,8 @@ export default function MainNavbar(props) {
     const [showCollectData, setShowCollectData] = useState(false)
     const [showProjectManagement, setShowProjectManagement] = useState(false)
 
+    const history = useHistory()
+
     useEffect(async () => {
         await GetAdminData({
             authToken: authToken,
@@ -73,16 +76,13 @@ export default function MainNavbar(props) {
         <>
             <Navbar fixed="top" bg="dark" variant="dark" expand="false">
                 {/* <Container fluid> */}
-
-                <div className="menu-button" onClick={handleShow}><MdOutlineMenu className="menu-button-icon" size={30} /></div>
+                <Nav.Link className="menu-button" as={Link} to="/home"  ><AiOutlineHome className="menu-button-icon" size={30} /></Nav.Link>
+                {/* <div className="menu-button" onClick={handleShow}><AiOutlineHome className="menu-button-icon" size={30} /></div> */}
                 <h2 style={{ "color": "white" }}>RHoMIS</h2>
 
                 
 
-                <Nav.Link className="logout-button" as={Link} to="/login" onClick={() => {
-                    setAuthToken(null)
-                    localStorage.clear()
-                }} >Logout</Nav.Link>
+                <Nav.Link className="logout-button" as={Link} to="/logout"  >Logout</Nav.Link>
 
 
 
