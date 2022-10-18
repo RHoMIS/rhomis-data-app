@@ -93,6 +93,14 @@ function SubmissionsCount(props) {
   if (props.draftOrLive === "live") {
     submissions = props.form.submissions.live;
   }
+  console.log("Submissions props")
+
+  console.log(props)
+  console.log(submissions)
+  if (submissions===null){
+    submissions='NA'
+  }
+
 
   return (
     <>
@@ -324,6 +332,7 @@ function FormTables(props) {
     }
   }
 
+  
   return (
     <Table striped bordered hover>
       <thead>
@@ -341,6 +350,26 @@ function FormTables(props) {
       <tbody>
         {formsExist ? (
           props.data.forms.map((form) => {
+
+            let draft_version = "NA"
+            if (form.draft){
+              draft_version = form.draftVersion
+            }
+
+            if (form.draftVersion===undefined| form.draftVersion==='' | form.draftVersion===null){
+              draft_version = "NA"
+            }
+
+            let live_version = "NA"
+            if (form.draft){
+              live_version = form.liveVersion
+            }
+
+            if (form.liveVersion===undefined | form.liveVersion==='' | form.liveVersion===null ){
+              live_version = "NA"
+            }
+
+
             // let date = new Date(form.createdAt)
             let dateString = formatDate(form.createdAt);
             if (form.project === props.projectSelected) {
@@ -362,11 +391,11 @@ function FormTables(props) {
 
               return (
                 <tr>
-                  <td style={{ "vertical-align": "middle" }}>{form.name}</td>
-                  <td style={{ "vertical-align": "middle" }}>
-                    {form.draft ? form.draftVersion : ""}
+                  <td >{form.name}</td>
+                  <td >
+                    {draft_version}
                   </td>
-                  <td style={{ "vertical-align": "middle" }}>
+                  <td >
                     <SubmissionsCount
                       submissionsLoading={props.submissionsLoading}
                       form={form}
@@ -374,11 +403,11 @@ function FormTables(props) {
                     />
                   </td>
 
-                  <td style={{ "vertical-align": "middle" }}>
-                    {form.live ? form.liveVersion : ""}
+                  <td >
+                    {live_version}
                   </td>
 
-                  <td style={{ "vertical-align": "middle" }}>
+                  <td >
                     <SubmissionsCount
                       submissionsLoading={props.submissionsLoading}
                       form={form}
@@ -435,10 +464,8 @@ function RenderProjectAdmin(props) {
   }
 
   return (
-    <>
-      <Card className="project-management-card">
-        <Card.Header as="h5">Select a Form</Card.Header>
-        <Card.Body>
+    <div style={{"width":'100%'}}>
+     
           {/* <Card.Title>Special title treatment</Card.Title> */}
           <FormTables
             submissionsLoading={props.submissionsLoading}
@@ -450,9 +477,8 @@ function RenderProjectAdmin(props) {
             setFilters={props.setFilters}
             setFormSelected={props.setFormSelected}
           />
-        </Card.Body>
-      </Card>
-    </>
+     
+    </div >
   );
 }
 

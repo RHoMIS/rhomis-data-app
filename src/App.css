@@ -31,11 +31,18 @@
   height: 100vh;
 }
 
+/* tr, td {
+  height: 10px !important;
+  max-height: 10px !important;
+} */
+
+
 
 
 .main-card{
   margin-top: 50px;
   margin-bottom: 25px;
+  min-height: 20em;
 
 }
 

@@ -22,7 +22,7 @@ function NoProjectFound() {
 
     return (
         <div>
-            <Table striped bordered hover>
+            <Table style={{"width":'100%'}} striped bordered hover>
                 <thead key="table-header">
                     <tr key="table-row-1">
 
@@ -67,8 +67,8 @@ function RenderProjectInformation(props) {
 
     if (props.data.projects !== undefined) {
         return (
-            <div>
-                <Table striped bordered hover>
+            <div style={{"width":'100%'}}>
+                <Table style={{"width":'100%'}} striped bordered hover>
                     <thead key="table-header">
                         <tr key="table-row-1">
                             <th key="table-head-item-1">Project Name</th>
@@ -87,7 +87,7 @@ function RenderProjectInformation(props) {
                                     <td style={{ "vertical-align": "middle" }} key={"table-row-" + index + "-item-1"}>{project.name}</td>
                                     <td style={{ "vertical-align": "middle" }} key={"table-row-" + index + "-item-2"}>{project.description}</td>
                                     <td style={{ "vertical-align": "middle" }} key={"table-row-" + index + "-item-3"}>{dateString}</td>
-                                    <td style={{ "vertical-align": "middle" }} key={"table-row-" + index + "-item-4"}>
+                                    <td style={{ "vertical-align": "middle", 'text-align': 'center'}} key={"table-row-" + index + "-item-4"}>
                                         <Button className="bg-dark text-white border-0" onClick={() => {
                                             history.push("/projects/" + project.name)
                                             
