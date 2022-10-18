@@ -22,14 +22,14 @@
 
 .portal-card-header {
     justify-self: center;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     color: white;
 }
 
 .portal-icon-container {
     display: grid;
     justify-items: center;
-    align-items: end;
+    align-items: center;
     margin-bottom: 60px !important;
     height: 100%;
     width: 100%;

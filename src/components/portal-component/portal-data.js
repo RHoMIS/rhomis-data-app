@@ -49,16 +49,16 @@ export const PortalDataAll = [
 
 
     // },
-    {
-        name: "Global Dataset",
-        label: "globalData",
-        text: "Query publicly available survey data by time, location, and content.",
-        icon: FiDatabase,
-        link: "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/9M6EHS",
-        external: true,
+    // {
+    //     name: "Global Dataset",
+    //     label: "globalData",
+    //     text: "Query publicly available survey data by time, location, and content.",
+    //     icon: FiDatabase,
+    //     link: "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/9M6EHS",
+    //     external: true,
 
 
-    },
+    // },
     {
         name: "Help",
         label: "help",

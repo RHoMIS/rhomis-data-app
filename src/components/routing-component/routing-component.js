@@ -103,16 +103,12 @@ function AuthenticatedComponents(props){
                     <Redirect from="/" to="/home" />
                 </Route>
                 <Route path="/home" component={PortalComponent} />
-                <Route path="/register"><RegisterComponent /></Route>
-
+                {/* <Route path="/register"><RegisterComponent /></Route> */}
                 <Route path="/projects/:projectName/forms/:formName/collect/:draftOrLive" component={DataCollectionComponent} />
                 <Route path="/projects/:projectName/forms/:formName/users" component={UserManagementComponent} />
                 <Route path="/projects/:projectName/forms/:formName/data" component={DataAccessComponent} />
                 <Route path="/projects/:projectName" component={FormManagementComponent} />
-
                 <Route path="/projects" ><ProjectManagementComponent /></Route>
-
-
 
                 <Route path="/administration" component={FormCreationComponent} />
 
@@ -143,8 +139,11 @@ function PublicComponents(props){
                 <Route exact path="/">
                     <Redirect from="/" to="/login" />
                 </Route>
-                <Route path="/register"><RegisterComponent /></Route>
                 <Route path="/login"><LoginComponent /></Route>
+
+                <Route path="/register"><RegisterComponent /></Route>
+                {/* <Redirect from="*" to="/login" /> */}
+
             </Switch >
             {/* </Fade> */}
 
