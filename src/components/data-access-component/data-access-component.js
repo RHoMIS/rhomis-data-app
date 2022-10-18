@@ -436,12 +436,14 @@ async function ProcessData(props) {
 function RenderUnitsForm(props) {
   return (
     <Card style={{ marginTop: "30px", width: "100%" }}>
-      <Card.Header>Units</Card.Header>
+      <Card.Header>Units (Data Cleaning)</Card.Header>
       <Card.Body>
-        Here you can provide numeric conversion factors for any values which
+        Here you can provide conversion factors for any values which
         were recorded in the survey The units you enter here will be used to
         calculate key indicators, such as crop yield, amounts of livestock
-        products produced, and amounts of inputs used.
+        products produced, and amounts of inputs used. You can also correct
+        any mispelt livestock or crop names
+
         <br />
         <br />
         Go through each table individually and convert units where you can. When
@@ -475,7 +477,7 @@ function RenderUnitsForm(props) {
 function RenderPriceAndCalorieConversions(props) {
   return (
     <Card style={{ marginTop: "30px", width: "100%" }}>
-      <Card.Header>Prices and Calories</Card.Header>
+      <Card.Header>Prices and Calories (Conversion Verification)</Card.Header>
       <Card.Body>
         Here you can provide numeric conversion factors for any values which
         were recorded in the survey The units you enter here will be used to
