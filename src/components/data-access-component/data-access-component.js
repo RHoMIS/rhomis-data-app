@@ -627,6 +627,22 @@ function RenderFinalOutputs(props) {
         survey by clicking the button below.
 
         <br/> 
+        <br/> 
+
+        The results in this bulk download include:
+
+        <ul>
+          <li><strong>Indicator Data</strong></li>
+          <li><strong>Processed Data</strong></li>
+          <li><strong>Reformatted Outputs</strong></li>
+          </ul>
+
+          <br/> 
+
+        More details about the outputs will be included
+        in the bulk-download folder, in a <strong>README.txt </strong>
+         file.
+
       <div style={{ display: "inline-grid", width: "100%" }}>
          <div style={{ marginLeft: "auto", marginRight: 0 }}>
          {/* {!buttonLoading?<Button onClick={async ()=>{
@@ -653,7 +669,7 @@ function RenderFinalOutputs(props) {
                 // link to the download URL
                 href={dataDownloadLink}>
                 <Button style={{ margin: "2px" }} className="bg-dark border-0">
-                  Download
+                  Download Results
                 </Button>
               </a>}
         </div>
@@ -665,9 +681,92 @@ function RenderFinalOutputs(props) {
   );
 }
 
+
+function RenderRawDataCard(props){
+
+  var [rawData, setRawData] = useState()
+  var [dataDownload, setDataDownloadLink] = useState()
+
+  let background_color = '#4B5320'
+  let text_color = 'white'
+  let show_tick = true
+
+  useEffect(()=>{
+    async function FetchRawData(){
+    const NewRawUnitsData = await FetchData({
+      authToken: props.authToken,
+      dataType: "rawData",
+      projectID: props.projectSelected,
+      formID: props.formSelected,
+      unit: false,
+      data: true,
+    });
+
+    setRawData(NewRawUnitsData)
+
+
+
+  }
+
+  FetchRawData()
+
+  },[])
+
+  useEffect(()=>{
+
+    if (rawData){
+      console.log(rawData)
+    const raw_data_download_link = generateDataDownloadLink(
+      rawData,
+      dataDownload
+    );
+    setDataDownloadLink(raw_data_download_link);
+    }
+
+  },[rawData])
+  
+
+
+  return(
+    <Card style={{ marginTop: "30px", width: "100%" }}>
+      <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>Raw Survey Responses</Card.Header>
+      <Card.Body>
+        Download you
+
+        <div style={{ display: "inline-grid", width: "100%" }}>
+        <div style={{ marginLeft: "auto", marginRight: 0 }}>
+            <>
+              <a
+                // Name of the file to download
+                download={
+                  props.projectSelected +
+                  "_" +
+                  props.formSelected +
+                  "_" +
+           
+                  "raw_data.csv"
+                }
+                // link to the download URL
+                href={dataDownload}>
+                <Button style={{ margin: "2px" }} className="bg-dark border-0">
+                  Download
+                </Button>
+              </a>
+              </>
+</div>
+</div>
+
+        </Card.Body>
+
+        </Card>
+  )
+}
+
 function RenderDataCard(props) {
   return (
     <>
+          {props.showUnits ? <RenderRawDataCard {...props} /> : <></>}
+
       {props.showUnits ? <RenderUnitsForm {...props} /> : <></>}
       {props.showPrices ? (
         <RenderPriceAndCalorieConversions {...props} />
