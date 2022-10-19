@@ -544,17 +544,76 @@ function RenderPriceAndCalorieConversions(props) {
   );
 }
 
+
+async function RetrieveZipFile(props){
+
+  console.log(props)
+  console.log(process.env.REACT_APP_API_URL + "api/data/all-data")
+  
+
+
+  const response = await axios({
+    method: "post",
+    responseType: 'arraybuffer',
+    url: process.env.REACT_APP_API_URL + "api/data/all-data",
+    data: {
+      projectID: props.projectID,
+      formID: props.formID,
+    },
+    headers: {
+      Authorization: props.authToken,
+    },
+  });
+  console.log(response.data)
+
+  props.setDataDownloadLink(generateZipDownloadLink(response.data, props.dataDownloadLink))
+  return
+
+
+}
+function generateZipDownloadLink(ZipResponse, dataDownloadLink) {
+  // Generating the csv string from the data we
+  // hope to download (comes in JSON format)
+  // Create a file-like immutable objesct
+  const data = new Blob([ZipResponse],{type: "application/zip"});
+
+  // Clears the previous URL used to download the data
+  if (dataDownloadLink !== "") {
+    window.URL.revokeObjectURL(dataDownloadLink);
+  }
+
+  // update the download link state
+  return window.URL.createObjectURL(data);
+}
+
 function RenderFinalOutputs(props) {
   const [rhomisDataSelect, setRHoMISSelect] = useState(null);
   const [rhomisData, setRHoMISData] = useState(null);
   const [dataDownloadLink, setDataDownloadLink] = useState("");
-
-
+  const [buttonLoading, setButtonLoading] = useState(true)
   let background_color = '#4B5320'
   let text_color = 'white'
   
+  useEffect(()=>{
+
+    async function RetrieveZipData(){
+      await RetrieveZipFile({
+        projectID:props.projectSelected,
+        formID:props.formSelected,
+        setButtonLoading:setButtonLoading,
+        authToken:props.authToken,
+        dataDownloadLink: dataDownloadLink,
+        setDataDownloadLink: setDataDownloadLink
+      })
+
+      setButtonLoading(false)
+    }
+
+    RetrieveZipData()
 
 
+
+  },[])
     
 
  
@@ -564,71 +623,43 @@ function RenderFinalOutputs(props) {
       <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>Final Outputs</Card.Header>
 
       <Card.Body>
-        <Form>
-          <Form.Group>
-            <Form.Label>Select the type of data</Form.Label>
-            <Form.Select
-              defaultValue="Select"
-              onChange={async (event) => {
-                setRHoMISSelect(event.target.value);
-                const newRHoMISData = await FetchData({
-                  authToken: props.authToken,
-                  dataType: event.target.value,
-                  projectID: props.projectSelected,
-                  formID: props.formSelected,
-                  unit: false,
-                  data: true,
-                });
-                const rhomis_download_link = generateDataDownloadLink(
-                  newRHoMISData,
-                  dataDownloadLink
-                );
-                setDataDownloadLink(rhomis_download_link);
-                setRHoMISData(newRHoMISData);
-              }}>
-              <option key="default-select" disabled={true}>
-                Select
-              </option>
-              {props.formData.dataSets.map((dataSet) => {
-                return (
-                  <option key={"data-option-" + dataSet}>{dataSet}</option>
-                );
-              })}
-            </Form.Select>
-          </Form.Group>
-        </Form>
+        You can now access all results for this
+        survey by clicking the button below.
 
-        {rhomisData ? (
-          <>
-            <br />
-            {renderTable(rhomisData)}
-            <div style={{ display: "inline-grid", width: "100%" }}>
-              <div
-                style={{
-                  marginLeft: "auto",
-                  marginRight: 0,
-                  marginTop: "2px",
-                }}>
-                <a
-                  // Name of the file to download
-                  download={
-                    props.projectSelected +
-                    "_" +
-                    props.formSelected +
-                    "_" +
-                    rhomisDataSelect +
-                    ".csv"
-                  }
-                  // link to the download URL
-                  href={dataDownloadLink}>
-                  <Button className="bg-dark border-0">Download Data</Button>
-                </a>
-              </div>
-            </div>
-          </>
-        ) : (
-          <></>
-        )}
+        <br/> 
+      <div style={{ display: "inline-grid", width: "100%" }}>
+         <div style={{ marginLeft: "auto", marginRight: 0 }}>
+         {/* {!buttonLoading?<Button onClick={async ()=>{
+          RetrieveZipFile({
+            projectID:props.projectSelected,
+            formID:props.formSelected,
+            setButtonLoading:setButtonLoading,
+            authToken:props.authToken,
+            dataDownloadLink: dataDownloadLink,
+            setDataDownloadLink: setDataDownloadLink
+          })
+        }}>Download Data</Button>:
+        <Button disabled={true}><Spinner/></Button>} */}
+
+        {buttonLoading?<Spinner></Spinner>:<a
+                // Name of the file to download
+                download={
+                  props.projectSelected +
+                  "_" +
+                  props.formSelected +
+                
+                  ".zip"
+                }
+                // link to the download URL
+                href={dataDownloadLink}>
+                <Button style={{ margin: "2px" }} className="bg-dark border-0">
+                  Download
+                </Button>
+              </a>}
+        </div>
+        </div>
+
+     
       </Card.Body>
     </Card>
   );
