@@ -11,7 +11,7 @@ import {
   FormControl,
 } from "react-bootstrap";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import {TiTickOutline} from 'react-icons/ti'
+import { TiTickOutline } from "react-icons/ti";
 import { useParams, useHistory } from "react-router-dom";
 
 import AuthContext from "../authentication-component/AuthContext";
@@ -221,7 +221,7 @@ function ShowUnitsForm(props) {
     "meat_calories",
     "staple_crop",
     "livestock_weight_kg",
-    "livestock_count_to_tlu"
+    "livestock_count_to_tlu",
   ];
   useEffect(() => {
     console.log("Units");
@@ -342,9 +342,8 @@ function ShowUnitsForm(props) {
               <Button
                 className="bg-dark border-0"
                 onClick={async () => {
-                  props.setLoading(true)
+                  props.setLoading(true);
                   await ProcessData({
-
                     commandType: props.commandType,
                     formSelected: props.formSelected,
                     projectSelected: props.projectSelected,
@@ -361,8 +360,7 @@ function ShowUnitsForm(props) {
                     formName: props.formSelected,
                     setFormData: props.setFormData,
                   });
-                  props.setLoading(false)
-
+                  props.setLoading(false);
                 }}>
                 {props.submissionLabel}
               </Button>
@@ -381,7 +379,7 @@ async function ProcessData(props) {
   )[0];
 
   Store.addNotification({
-    id: 'notification-start',
+    id: "notification-start",
     title: props.process_label + " Started",
     message: "Please wait",
     type: "default",
@@ -389,10 +387,8 @@ async function ProcessData(props) {
     container: "top-right",
     animationIn: ["animate__animated", "animate__fadeIn"],
     animationOut: ["animate__animated", "animate__fadeOut"],
-   
   });
 
-  
   try {
     const result = await axios({
       method: "post",
@@ -423,7 +419,7 @@ async function ProcessData(props) {
         },
       });
 
-      Store.removeNotification('notification-start')
+      Store.removeNotification("notification-start");
     }
     return true;
   } catch (err) {
@@ -435,34 +431,40 @@ async function ProcessData(props) {
       insert: "top",
       container: "top-right",
       animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"]
-  
+      animationOut: ["animate__animated", "animate__fadeOut"],
     });
     return false;
   }
 }
 
 function RenderUnitsForm(props) {
-  let background_color = ''
-  let text_color = 'black'
-  let show_tick = false
-  if (props.showPrices===true){
-    background_color = '#4B5320'
-    text_color = 'white'
-    show_tick = true
+  let background_color = "";
+  let text_color = "black";
+  let show_tick = false;
+  if (props.showPrices === true) {
+    background_color = "#4B5320";
+    text_color = "white";
+    show_tick = true;
   }
-
 
   return (
     <Card style={{ marginTop: "30px", width: "100%" }}>
-      <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>{show_tick? <><TiTickOutline/> Units and Data Cleaning (Completed)</>:'Units and Data Cleaning'}</Card.Header>
+      <Card.Header
+        style={{ backgroundColor: background_color, color: text_color }}>
+        {show_tick ? (
+          <>
+            <TiTickOutline /> Units and Data Cleaning (Completed)
+          </>
+        ) : (
+          "Units and Data Cleaning"
+        )}
+      </Card.Header>
       <Card.Body>
-        Here you can provide conversion factors for any values which
-        were recorded in the survey The units you enter here will be used to
+        Here you can provide conversion factors for any values which were
+        recorded in the survey The units you enter here will be used to
         calculate key indicators, such as crop yield, amounts of livestock
-        products produced, and amounts of inputs used. You can also correct
-        any mispelt livestock or crop names
-
+        products produced, and amounts of inputs used. You can also correct any
+        mispelt livestock or crop names
         <br />
         <br />
         Go through each table individually and convert units where you can. When
@@ -494,35 +496,46 @@ function RenderUnitsForm(props) {
 }
 
 function RenderPriceAndCalorieConversions(props) {
-  let background_color = ''
-  let text_color = 'black'
-  let show_tick = false
-  if (props.showOutputs===true){
-    background_color = '#4B5320'
-    text_color = 'white'
-    show_tick = true
+  let background_color = "";
+  let text_color = "black";
+  let show_tick = false;
+  if (props.showOutputs === true) {
+    background_color = "#4B5320";
+    text_color = "white";
+    show_tick = true;
   }
-
-
-    
 
   return (
     <Card style={{ marginTop: "30px", width: "100%" }}>
-    <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>{show_tick? <><TiTickOutline/> Prices and Calorie Conversion Verification (Completed) </>:'Prices and Calorie Conversion Verification'}</Card.Header>
+      <Card.Header
+        style={{ backgroundColor: background_color, color: text_color }}>
+        {show_tick ? (
+          <>
+            <TiTickOutline /> Prices and Calorie Conversion Verification
+            (Completed){" "}
+          </>
+        ) : (
+          "Prices and Calorie Conversion Verification"
+        )}
+      </Card.Header>
       <Card.Body>
-        Here you can provide numeric conversion factors for any values which
-        were recorded in the survey The units you enter here will be used to
-        calculate key indicators, such as crop yield, amounts of livestock
-        products produced, and amounts of inputs used.
+        In the previous step you tidied crop and livestock names. You also
+        provided numeric conversion factors for units. These were used these to identify 
+        which crops and livestock to calculate indicators for. 
         <br />
         <br />
-        Go through each table individually and convert units where you can. When
-        you have converted all the units in one table click "Submit". When you
-        have converted all of the units tick the confirmation box below and you
-        will proceed to the next step in the calculations.
+        We have estimated prices and calorie conversions for crops and livestock in this
+        survey. Here you can verify them, these estimates will be used when calculating
+        final indicators. 
         <br />
         <br />
-        For more information on converting units, click{" "}
+        Again, go through each table individually and convert units where you can. When
+        you have converted all values in one table click "Submit". When you
+        have converted all of tables, tick the confirmation box below and you
+        will proceed to calculate final indicators.
+        <br />
+        <br />
+        For more information on converting prices and calories, click
         <a
           href={process.env.REACT_APP_DOCS + props.doc_extension}
           target="_blank">
@@ -544,17 +557,13 @@ function RenderPriceAndCalorieConversions(props) {
   );
 }
 
-
-async function RetrieveZipFile(props){
-
-  console.log(props)
-  console.log(process.env.REACT_APP_API_URL + "api/data/all-data")
-  
-
+async function RetrieveZipFile(props) {
+  console.log(props);
+  console.log(process.env.REACT_APP_API_URL + "api/data/all-data");
 
   const response = await axios({
     method: "post",
-    responseType: 'arraybuffer',
+    responseType: "arraybuffer",
     url: process.env.REACT_APP_API_URL + "api/data/all-data",
     data: {
       projectID: props.projectID,
@@ -564,18 +573,18 @@ async function RetrieveZipFile(props){
       Authorization: props.authToken,
     },
   });
-  console.log(response.data)
+  console.log(response.data);
 
-  props.setDataDownloadLink(generateZipDownloadLink(response.data, props.dataDownloadLink))
-  return
-
-
+  props.setDataDownloadLink(
+    generateZipDownloadLink(response.data, props.dataDownloadLink)
+  );
+  return;
 }
 function generateZipDownloadLink(ZipResponse, dataDownloadLink) {
   // Generating the csv string from the data we
   // hope to download (comes in JSON format)
   // Create a file-like immutable objesct
-  const data = new Blob([ZipResponse],{type: "application/zip"});
+  const data = new Blob([ZipResponse], { type: "application/zip" });
 
   // Clears the previous URL used to download the data
   if (dataDownloadLink !== "") {
@@ -590,62 +599,64 @@ function RenderFinalOutputs(props) {
   const [rhomisDataSelect, setRHoMISSelect] = useState(null);
   const [rhomisData, setRHoMISData] = useState(null);
   const [dataDownloadLink, setDataDownloadLink] = useState("");
-  const [buttonLoading, setButtonLoading] = useState(true)
-  let background_color = '#4B5320'
-  let text_color = 'white'
-  
-  useEffect(()=>{
+  const [buttonLoading, setButtonLoading] = useState(true);
+  let background_color = "#4B5320";
+  let text_color = "white";
 
-    async function RetrieveZipData(){
+  useEffect(() => {
+    async function RetrieveZipData() {
       await RetrieveZipFile({
-        projectID:props.projectSelected,
-        formID:props.formSelected,
-        setButtonLoading:setButtonLoading,
-        authToken:props.authToken,
+        projectID: props.projectSelected,
+        formID: props.formSelected,
+        setButtonLoading: setButtonLoading,
+        authToken: props.authToken,
         dataDownloadLink: dataDownloadLink,
-        setDataDownloadLink: setDataDownloadLink
-      })
+        setDataDownloadLink: setDataDownloadLink,
+      });
 
-      setButtonLoading(false)
+      setButtonLoading(false);
     }
 
-    RetrieveZipData()
-
-
-
-  },[])
-    
-
- 
+    RetrieveZipData();
+  }, []);
 
   return (
     <Card style={{ "margin-top": "30px", width: "100%" }}>
-      <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>Final Outputs</Card.Header>
+      <Card.Header
+        style={{ backgroundColor: background_color, color: text_color }}>
+        Final Outputs
+      </Card.Header>
 
       <Card.Body>
-        You can now access all results for this
-        survey by clicking the button below.
-
-        <br/> 
-        <br/> 
-
+        You can now access all results for this survey by clicking the button
+        below.
+        <br />
+        <br />
         The results in this bulk download include:
-
         <ul>
-          <li><strong>Indicator Data</strong></li>
-          <li><strong>Processed Data</strong></li>
-          <li><strong>Reformatted Outputs</strong></li>
-          </ul>
-
-          <br/> 
-
-        More details about the outputs will be included
-        in the bulk-download folder, in a <strong>README.txt </strong>
-         file.
-
-      <div style={{ display: "inline-grid", width: "100%" }}>
-         <div style={{ marginLeft: "auto", marginRight: 0 }}>
-         {/* {!buttonLoading?<Button onClick={async ()=>{
+        <li>
+            <strong>Documentation</strong>
+          </li>
+          <li>
+            <strong>The most recent survey draft</strong>
+          </li>
+          <li>
+            <strong>Indicator Data</strong>
+          </li>
+          <li>
+            <strong>Processed Data</strong>
+          </li>
+          <li>
+            <strong>Reformatted Outputs</strong>
+          </li>
+        </ul>
+        <br />
+        More details about the outputs will be included in the bulk-download
+        folder, in a <strong>README.txt </strong>
+        file.
+        <div style={{ display: "inline-grid", width: "100%" }}>
+          <div style={{ marginLeft: "auto", marginRight: 0 }}>
+            {/* {!buttonLoading?<Button onClick={async ()=>{
           RetrieveZipFile({
             projectID:props.projectSelected,
             formID:props.formSelected,
@@ -657,85 +668,104 @@ function RenderFinalOutputs(props) {
         }}>Download Data</Button>:
         <Button disabled={true}><Spinner/></Button>} */}
 
-        {buttonLoading?<Spinner></Spinner>:<a
+            {buttonLoading ? (
+              <Spinner></Spinner>
+            ) : (
+              <a
                 // Name of the file to download
                 download={
-                  props.projectSelected +
-                  "_" +
-                  props.formSelected +
-                
-                  ".zip"
+                  props.projectSelected + "_" + props.formSelected + ".zip"
                 }
                 // link to the download URL
                 href={dataDownloadLink}>
                 <Button style={{ margin: "2px" }} className="bg-dark border-0">
                   Download Results
                 </Button>
-              </a>}
+              </a>
+            )}
+          </div>
         </div>
-        </div>
-
-     
       </Card.Body>
     </Card>
   );
 }
 
+function RenderRawDataCard(props) {
+  var [rawData, setRawData] = useState();
+  var [dataDownload, setDataDownloadLink] = useState();
 
-function RenderRawDataCard(props){
+  let background_color = "#4B5320";
+  let text_color = "white";
+  let show_tick = true;
 
-  var [rawData, setRawData] = useState()
-  var [dataDownload, setDataDownloadLink] = useState()
+  useEffect(() => {
+    async function FetchRawData() {
+      const NewRawUnitsData = await FetchData({
+        authToken: props.authToken,
+        dataType: "rawData",
+        projectID: props.projectSelected,
+        formID: props.formSelected,
+        unit: false,
+        data: true,
+      });
 
-  let background_color = '#4B5320'
-  let text_color = 'white'
-  let show_tick = true
-
-  useEffect(()=>{
-    async function FetchRawData(){
-    const NewRawUnitsData = await FetchData({
-      authToken: props.authToken,
-      dataType: "rawData",
-      projectID: props.projectSelected,
-      formID: props.formSelected,
-      unit: false,
-      data: true,
-    });
-
-    setRawData(NewRawUnitsData)
-
-
-
-  }
-
-  FetchRawData()
-
-  },[])
-
-  useEffect(()=>{
-
-    if (rawData){
-      console.log(rawData)
-    const raw_data_download_link = generateDataDownloadLink(
-      rawData,
-      dataDownload
-    );
-    setDataDownloadLink(raw_data_download_link);
+      setRawData(NewRawUnitsData);
     }
 
-  },[rawData])
-  
+    FetchRawData();
+  }, []);
 
+  useEffect(() => {
+    if (rawData) {
+      console.log(rawData);
+      const raw_data_download_link = generateDataDownloadLink(
+        rawData,
+        dataDownload
+      );
+      setDataDownloadLink(raw_data_download_link);
+    }
+  }, [rawData]);
 
-  return(
+  return (
     <Card style={{ marginTop: "30px", width: "100%" }}>
-      <Card.Header style={{'backgroundColor':background_color, 'color':text_color}}>Raw Survey Responses</Card.Header>
+      <Card.Header
+        style={{ backgroundColor: background_color, color: text_color }}>
+        Raw Survey Responses
+      </Card.Header>
       <Card.Body>
-        Download you
-
+        Download the raw data from your survey. If you have collected more
+        responses since last time you visited, click refresh to fetch new
+        responses. You can also recalculate indicators for all of these
+        responses, by going through each of the steps below
         <div style={{ display: "inline-grid", width: "100%" }}>
-        <div style={{ marginLeft: "auto", marginRight: 0 }}>
+          <div style={{ marginLeft: "auto", marginRight: 0 }}>
             <>
+              <Button
+                style={{ margin: "2px" }}
+                className="bg-dark border-0"
+                onClick={async () => {
+                  props.setLoading(true);
+                  await ProcessData({
+                    commandType: "units",
+                    formSelected: props.formSelected,
+                    projectSelected: props.projectSelected,
+                    process_label: "Raw Data and Unit Extraction",
+                    data: props.userInfo,
+                    authToken: props.authToken,
+                  });
+
+                  GetInformationForFormComponent({
+                    setAuthToken: props.setAuthToken,
+                    authToken: props.authToken,
+                    setUserInfo: props.setUserInfo,
+                    projectName: props.projectSelected,
+                    formName: props.formSelected,
+                    setFormData: props.setFormData,
+                  });
+                  props.setLoading(false);
+                }}>
+                Refresh
+              </Button>
               <a
                 // Name of the file to download
                 download={
@@ -743,7 +773,6 @@ function RenderRawDataCard(props){
                   "_" +
                   props.formSelected +
                   "_" +
-           
                   "raw_data.csv"
                 }
                 // link to the download URL
@@ -752,20 +781,18 @@ function RenderRawDataCard(props){
                   Download
                 </Button>
               </a>
-              </>
-</div>
-</div>
-
-        </Card.Body>
-
-        </Card>
-  )
+            </>
+          </div>
+        </div>
+      </Card.Body>
+    </Card>
+  );
 }
 
 function RenderDataCard(props) {
   return (
     <>
-          {props.showUnits ? <RenderRawDataCard {...props} /> : <></>}
+      {props.showUnits ? <RenderRawDataCard {...props} /> : <></>}
 
       {props.showUnits ? <RenderUnitsForm {...props} /> : <></>}
       {props.showPrices ? (
@@ -986,8 +1013,8 @@ function RenderSpinner() {
       <Spinner
         as="span"
         animation="border"
-        style={{ 'margin-top':'4em','width': "4rem", 'height': "4rem" }}
-                role="status"
+        style={{ "margin-top": "4em", width: "4rem", height: "4rem" }}
+        role="status"
         aria-hidden="true"
       />
     </>
@@ -1010,7 +1037,7 @@ async function CheckFormData(props) {
     //   animationIn: ["animate__animated", "animate__fadeIn"],
     //   animationOut: ["animate__animated", "animate__fadeOut"],
     // });
-    props.setLoading(true)
+    props.setLoading(true);
     const processing_result = await ProcessData({
       commandType: "units",
       formSelected: props.formSelected,
@@ -1018,7 +1045,7 @@ async function CheckFormData(props) {
       process_label: "Unit Extraction",
       data: props.data,
       authToken: props.authToken,
-      setLoading: props.setLoading
+      setLoading: props.setLoading,
     });
 
     if (processing_result === true) {
@@ -1030,11 +1057,9 @@ async function CheckFormData(props) {
         formName: props.formSelected,
         setFormData: props.setFormData,
       });
-      props.setLoading(false)
+      props.setLoading(false);
 
-      
-      Store.removeNotification('unit_extraction')
-
+      Store.removeNotification("unit_extraction");
     }
   }
 
@@ -1104,7 +1129,7 @@ export default function DataAccessComponent() {
   useEffect(() => {
     console.log("Form Data");
     console.log(formData);
-    
+
     async function CheckAndUpdateFormInformation() {
       await CheckFormData({
         setAuthToken: setAuthToken,
@@ -1122,7 +1147,7 @@ export default function DataAccessComponent() {
         setShowUnits: setShowUnits,
         setShowPrices: setShowPrices,
         setShowOutputs: setShowOutputs,
-        setLoading: setLoading
+        setLoading: setLoading,
       });
     }
 
@@ -1151,7 +1176,7 @@ export default function DataAccessComponent() {
                 showOutputs: showOutputs,
                 setAuthToken: setAuthToken,
                 setFormData: setFormData,
-                setLoading:setLoading,
+                setLoading: setLoading,
                 doc_extension:
                   "source/user-guide/navigating-the-app.html#data-access",
               })
