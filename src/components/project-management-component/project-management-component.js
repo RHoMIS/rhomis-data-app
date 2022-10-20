@@ -140,6 +140,7 @@ export default function ProjectManagementComponent(props) {
 
     const [adminData, setAdminData] = useContext(UserContext)
 
+   
 
     const [projectSelected, setProjectSelected] = useState(false)
     useEffect(async () => {
@@ -181,7 +182,7 @@ export default function ProjectManagementComponent(props) {
     doc_extension="source/user-guide/navigating-the-app.html#project-management"
 
     CardBody={
-        RenderProjectInformation({data:adminData, setProjectSelected:setProjectSelected, authToken:props.authToken})
+        RenderProjectInformation({data:adminData, setProjectSelected:setProjectSelected, authToken:authToken})
      }    
     >
     </MainCard>
