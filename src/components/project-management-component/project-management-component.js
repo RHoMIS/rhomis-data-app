@@ -46,7 +46,7 @@ function NoProjectFound(props) {
                     <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
             <div style={{ display: "inline-grid", width: "100%" }}>
                 <div style={{ marginLeft: "auto", marginRight: 0 }}>
-                <Button className='bg-dark border-0'>New Project</Button>
+                <Button type="submit" className='bg-dark border-0'>New Project</Button>
                 </div>
                 </div>
                 </form>
@@ -110,6 +110,8 @@ function RenderProjectInformation(props) {
 
                     </tbody>
                 </Table>
+             
+
                 <form method="post" action={process.env.REACT_APP_SURVEY_BUILDER_URL} class="inline">
                     <input type="hidden" name="token" value={props.authToken} />
                     <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
@@ -179,7 +181,7 @@ export default function ProjectManagementComponent(props) {
     doc_extension="source/user-guide/navigating-the-app.html#project-management"
 
     CardBody={
-        RenderProjectInformation({data:adminData, setProjectSelected:setProjectSelected})
+        RenderProjectInformation({data:adminData, setProjectSelected:setProjectSelected, authToken:props.authToken})
      }    
     >
     </MainCard>
