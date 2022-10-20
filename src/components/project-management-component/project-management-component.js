@@ -41,6 +41,14 @@ function NoProjectFound() {
                 </tbody>
 
             </Table>
+
+            <div style={{ display: "inline-grid", width: "100%" }}>
+                <div style={{ marginLeft: "auto", marginRight: 0 }}>
+                    <a href={process.env.REACT_APP_SURVEY_BUILDER_URL}>
+                <Button className='bg-dark border-0'>New Project</Button>
+                </a>
+                </div>
+                </div>
         </div >
     )
 }
@@ -101,6 +109,14 @@ function RenderProjectInformation(props) {
 
                     </tbody>
                 </Table>
+                <div style={{ display: "inline-grid", width: "100%" }}>
+                <div style={{ marginLeft: "auto", marginRight: 0 }}>
+                    <a href={process.env.REACT_APP_SURVEY_BUILDER_URL}>
+                <Button className='bg-dark border-0'>New Project</Button>
+                </a>
+                </div>
+                </div>
+
             </div>
 
 

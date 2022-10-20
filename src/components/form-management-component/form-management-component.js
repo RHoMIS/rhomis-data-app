@@ -37,6 +37,7 @@ function formatDate(date) {
 
 function NoInfoFound() {
   return (
+    <>
     <Table striped bordered hover>
       <thead>
         <tr>
@@ -52,6 +53,14 @@ function NoInfoFound() {
         </tr>
       </tbody>
     </Table>
+            <div style={{ display: "inline-grid", width: "100%" }}>
+                <div style={{ marginLeft: "auto", marginRight: 0 }}>
+                    <a href={process.env.REACT_APP_SURVEY_BUILDER_URL}>
+                <Button className='bg-dark border-0'>New Form</Button>
+                </a>
+                </div>
+                </div>
+    </>
   );
 }
 
@@ -334,6 +343,7 @@ function FormTables(props) {
 
   
   return (
+    <>
     <Table striped bordered hover>
       <thead>
         <tr>
@@ -440,6 +450,14 @@ function FormTables(props) {
         {/* <tr><td style={{ "text-align": "center" }} colSpan={5}><a href="https://rhomis-survey.stats4sdtest.online"><Button >Start Creating a Survey</Button></a></td></tr></>} */}
       </tbody>
     </Table>
+            <div style={{ display: "inline-grid", width: "100%" }}>
+                <div style={{ marginLeft: "auto", marginRight: 0 }}>
+                    <a href={process.env.REACT_APP_SURVEY_BUILDER_URL}>
+                <Button className='bg-dark border-0'>New Form</Button>
+                </a>
+                </div>
+                </div>
+    </>
   );
 }
 
