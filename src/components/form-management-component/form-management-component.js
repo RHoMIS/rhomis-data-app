@@ -35,7 +35,7 @@ function formatDate(date) {
   return [day, month, year].join("/");
 }
 
-function NoInfoFound() {
+function NoInfoFound(props) {
   return (
     <>
     <Table striped bordered hover>
@@ -53,13 +53,15 @@ function NoInfoFound() {
         </tr>
       </tbody>
     </Table>
+    <form method="post" action={process.env.REACT_APP_SURVEY_BUILDER_URL} class="inline">
+                    <input type="hidden" name="token" value={props.authToken} />
+                    <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
             <div style={{ display: "inline-grid", width: "100%" }}>
                 <div style={{ marginLeft: "auto", marginRight: 0 }}>
-                    <a href={process.env.REACT_APP_SURVEY_BUILDER_URL}>
-                <Button className='bg-dark border-0'>New Form</Button>
-                </a>
+                <Button type="submit" className='bg-dark border-0'>New Form</Button>
                 </div>
                 </div>
+                </form>
     </>
   );
 }
@@ -315,13 +317,13 @@ function FormTables(props) {
   // the component is has all of the
   // form data needed for the table
   if (!props.data) {
-    return <NoInfoFound />;
+    return <NoInfoFound authToken={props.authToken}/>;
   }
   if (!props.data.user) {
-    return <NoInfoFound />;
+    return <NoInfoFound authToken={props.authToken}/>;
   }
   if (!props.data.user.roles) {
-    return <NoInfoFound />;
+    return <NoInfoFound authToken={props.authToken}/>;
   }
   if (props.data.user.roles.projectManager !== undefined) {
     if (props.data.user.roles.projectManager.includes(props.projectSelected))
@@ -450,13 +452,15 @@ function FormTables(props) {
         {/* <tr><td style={{ "text-align": "center" }} colSpan={5}><a href="https://rhomis-survey.stats4sdtest.online"><Button >Start Creating a Survey</Button></a></td></tr></>} */}
       </tbody>
     </Table>
+    <form method="post" action={process.env.REACT_APP_SURVEY_BUILDER_URL} class="inline">
+                    <input type="hidden" name="token" value={props.authToken} />
+                    <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
             <div style={{ display: "inline-grid", width: "100%" }}>
                 <div style={{ marginLeft: "auto", marginRight: 0 }}>
-                    <a href={process.env.REACT_APP_SURVEY_BUILDER_URL}>
-                <Button className='bg-dark border-0'>New Form</Button>
-                </a>
+                <Button type="submit" className='bg-dark border-0'>New Form</Button>
                 </div>
                 </div>
+                </form>
     </>
   );
 }

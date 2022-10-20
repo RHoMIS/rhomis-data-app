@@ -18,7 +18,7 @@ import { deflateSync } from 'zlib'
 import { FetchUserInformation, CheckForLocalToken } from '../fetching-context-info/fetching-context-info'
 
 
-function NoProjectFound() {
+function NoProjectFound(props) {
 
     return (
         <div>
@@ -41,14 +41,15 @@ function NoProjectFound() {
                 </tbody>
 
             </Table>
-
+            <form method="post" action={process.env.REACT_APP_SURVEY_BUILDER_URL} class="inline">
+                    <input type="hidden" name="token" value={props.authToken} />
+                    <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
             <div style={{ display: "inline-grid", width: "100%" }}>
                 <div style={{ marginLeft: "auto", marginRight: 0 }}>
-                    <a href={process.env.REACT_APP_SURVEY_BUILDER_URL}>
                 <Button className='bg-dark border-0'>New Project</Button>
-                </a>
                 </div>
                 </div>
+                </form>
         </div >
     )
 }
@@ -58,18 +59,18 @@ function RenderProjectInformation(props) {
     const history = useHistory()
     console.log(props)
     if (!props.data) {
-        return (<NoProjectFound />)
+        return (<NoProjectFound authToken={props.authToken}/>)
 
 
     }
 
     if (!props.data.projects) {
-        return (<NoProjectFound />)
+        return (<NoProjectFound authToken={props.authToken}/>)
     }
 
 
     if (props.data.projects.length === 0) {
-        return (<NoProjectFound />)
+        return (<NoProjectFound authToken={props.authToken}/>)
     }
 
 
@@ -109,13 +110,15 @@ function RenderProjectInformation(props) {
 
                     </tbody>
                 </Table>
-                <div style={{ display: "inline-grid", width: "100%" }}>
+                <form method="post" action={process.env.REACT_APP_SURVEY_BUILDER_URL} class="inline">
+                    <input type="hidden" name="token" value={props.authToken} />
+                    <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
+            <div style={{ display: "inline-grid", width: "100%" }}>
                 <div style={{ marginLeft: "auto", marginRight: 0 }}>
-                    <a href={process.env.REACT_APP_SURVEY_BUILDER_URL}>
-                <Button className='bg-dark border-0'>New Project</Button>
-                </a>
+                <Button type="submit" className='bg-dark border-0'>New Project</Button>
                 </div>
                 </div>
+                </form>
 
             </div>
 
