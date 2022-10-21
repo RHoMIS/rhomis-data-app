@@ -367,6 +367,9 @@ function ShowUnitsForm(props) {
             </>
           )}
         </div>
+        <div style={{ marginLeft: "auto", marginRight: 0 }}>
+          Last Updated: {props.updatedTime}
+          </div>
       </div>
     </>
   );
@@ -489,6 +492,7 @@ function RenderUnitsForm(props) {
           submissionLabel="Calculate Prices"
           commandType="prices"
           processLabel="Price Calculations"
+          updatedTime ={props.formData.time_updated.unitsExtracted}
         />
       </Card.Body>
     </Card>
@@ -551,6 +555,9 @@ function RenderPriceAndCalorieConversions(props) {
           submissionLabel="Calculate Indicators"
           commandType="indicators"
           processLabel="Indicator Calculations"
+          updatedTime ={props.formData.time_updated.pricesCalculated}
+       
+
         />
       </Card.Body>
     </Card>
@@ -684,6 +691,9 @@ function RenderFinalOutputs(props) {
               </a>
             )}
           </div>
+          <div style={{ marginLeft: "auto", marginRight: 0 }}>
+          Last Updated: {props.formData.time_updated.finalIndicators}
+          </div>
         </div>
       </Card.Body>
     </Card>
@@ -699,6 +709,9 @@ function RenderRawDataCard(props) {
   let show_tick = true;
 
   useEffect(() => {
+    console.log('Units props')
+
+    console.log(props)
     async function FetchRawData() {
       const NewRawUnitsData = await FetchData({
         authToken: props.authToken,
@@ -713,6 +726,9 @@ function RenderRawDataCard(props) {
     }
 
     FetchRawData();
+
+
+
   }, []);
 
   useEffect(() => {
@@ -781,7 +797,13 @@ function RenderRawDataCard(props) {
                   Download
                 </Button>
               </a>
+
+              
             </>
+          
+          </div>
+          <div style={{ marginLeft: "auto", marginRight: 0 }}>
+          Last Updated: {props.formData.time_updated.unitsExtracted}
           </div>
         </div>
       </Card.Body>
