@@ -1161,7 +1161,7 @@ export default function DataAccessComponent() {
         filters={[projectSelected, formSelected]}
         history={history}
         back_link={"/projects/" + projectSelected}
-        doc_extension="source/user-guide/navigating-the-app.html#data-access"
+        doc_extension="source/user-guide/processing-data.html#managing-data"
         CardBody={
           loading
             ? RenderSpinner()
@@ -1178,7 +1178,7 @@ export default function DataAccessComponent() {
                 setFormData: setFormData,
                 setLoading: setLoading,
                 doc_extension:
-                  "source/user-guide/navigating-the-app.html#data-access",
+                  "source/user-guide/processing-data.html#managing-data",
               })
         }></MainCard>
     </>
