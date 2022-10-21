@@ -539,7 +539,7 @@ function RenderPriceAndCalorieConversions(props) {
         will proceed to calculate final indicators.
         <br />
         <br />
-        For more information on converting prices and calories, click
+        For more information on converting prices and calories, click{" "}
         <a
           href={process.env.REACT_APP_DOCS + props.doc_extension}
           target="_blank">
