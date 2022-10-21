@@ -102,6 +102,32 @@ function PortalCard(props) {
     }
 
 
+    if (props.data.name === "surveyBuilder") {
+
+        return (
+            <div>
+                <form method="post" action={props.data.link} class="inline">
+                    <input type="hidden" name="token" value={props.authToken} />
+                    <input type="hidden" name="redirect_url" value="/admin/module" />
+                    <button type="submit" style={{ margin: 0, padding: 0, border: 0, backgroundColor: "white" }}>
+
+
+                        < Card key={"card-" + props.data.name} className="sub-card portal-card border-0">
+                            <div key={"header-container-" + props.data.name} className="portal-card-header-container">
+                                <h4 key={"card-header-" + props.data.name} className="portal-card-header">{props.data.name}</h4>
+                            </div>
+                            <div key={"icon-container-" + props.data.name} className="portal-icon-container">
+                                <Icon size={100} color="white" />
+                            </div>
+                        </Card >
+                    </button >
+                </form>
+
+            </div >
+        )
+    }
+
+
 
     if (props.data.external === true & props.data.label !== "surveyBuilder") {
         return (

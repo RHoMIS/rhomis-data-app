@@ -20,6 +20,7 @@ import { VscInspect } from 'react-icons/vsc'
 import { FcAcceptDatabase } from 'react-icons/fc'
 import { FiDatabase } from 'react-icons/fi'
 import { MdHelpOutline, MdOutlineDashboardCustomize, MdOutlineSendToMobile, MdOutlineCreate } from 'react-icons/md'
+import {AiOutlineForm} from  'react-icons/ai'
 export const PortalDataAll = [
     {
         name: "Build a Survey",
@@ -29,6 +30,16 @@ export const PortalDataAll = [
         link: process.env.REACT_APP_SURVEY_BUILDER_URL,
         external: true,
     },
+    {
+        name: "Module Management",
+        label: "administrator",
+        text: "Manage RHoMIS Modules",
+        icon: AiOutlineForm,
+        link: process.env.REACT_APP_SURVEY_BUILDER_URL,
+        external: true,
+
+    },
+
     {
         name: "Manage Projects",
         label: "projectManager",
@@ -66,14 +77,14 @@ export const PortalDataAll = [
         icon: MdHelpOutline,
         link: process.env.REACT_APP_DOCS + "source/user-guide/first-time-user.html#rhomis-portal",
         external: true,
-    },
-    {
-        name: "Administration",
-        label: "administrator",
-        text: "Create projects and forms (only used for development)",
-        icon: MdOutlineCreate,
-        link: "/administration",
-        external: false,
     }
+    // {
+    //     name: "Admin",
+    //     label: "administrator",
+    //     text: "Create projects and forms (only used for development)",
+    //     icon: MdOutlineCreate,
+    //     link: "/administration",
+    //     external: false,
+    // }
 ]
 
