@@ -24,7 +24,7 @@ https://reactrouter.com/web/example/auth-workflow
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // Import router information
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 
 // Import the various components
@@ -39,9 +39,33 @@ import 'react-notifications-component/dist/theme.css'
 
 
 
+import NoMobile from './components/no-mobile-component/no-mobile-component';
+
+
 function App() {
   const [authToken, setAuthToken] = useState(null);
   const [userInfo, setUserInfo] = useState(null)
+
+
+  const [width, setWidth] = useState(window.innerWidth);
+  const [isMobile, setIsMobile] = useState(false);
+
+function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+}
+useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+        window.removeEventListener('resize', handleWindowSizeChange);
+    }
+}, []);
+
+useEffect(() => {
+  setIsMobile(width <= 1000) // use to 768
+
+},[width])
+
+
 
   return (
     <>
@@ -51,7 +75,7 @@ function App() {
         <UserContext.Provider value={[userInfo, setUserInfo]}>
           <div className="main-app-background">
             <div className="main-page">
-              <RoutingComponent />
+              {!isMobile?<RoutingComponent />:<NoMobile/>}
             </div >
           </div>
         </UserContext.Provider>
