@@ -351,14 +351,17 @@ function ShowUnitsForm(props) {
                     data: props.userInfo,
                     authToken: props.authToken,
                   });
+                
 
-                  GetInformationForFormComponent({
+                  await GetInformationForFormComponent({
                     setAuthToken: props.setAuthToken,
                     authToken: props.authToken,
                     setUserInfo: props.setUserInfo,
                     projectName: props.projectSelected,
                     formName: props.formSelected,
                     setFormData: props.setFormData,
+                    setShowRawData: props.setShowRawData,
+                    setUserInfo: props.setUserInfo
                   });
                   props.setLoading(false);
                 }}>
@@ -376,6 +379,7 @@ function ShowUnitsForm(props) {
 }
 
 async function ProcessData(props) {
+  console.log(props)
   const form = props.data.forms.filter(
     (item) =>
       item.name === props.formSelected && item.project === props.projectSelected
@@ -762,7 +766,7 @@ function RenderRawDataCard(props) {
                 onClick={async () => {
                   props.setLoading(true);
                   await ProcessData({
-                    commandType: "units",
+                    commandType: "raw-data",
                     formSelected: props.formSelected,
                     projectSelected: props.projectSelected,
                     process_label: "Raw Data and Unit Extraction",
@@ -770,13 +774,15 @@ function RenderRawDataCard(props) {
                     authToken: props.authToken,
                   });
 
-                  GetInformationForFormComponent({
+                  await GetInformationForFormComponent({
                     setAuthToken: props.setAuthToken,
                     authToken: props.authToken,
                     setUserInfo: props.setUserInfo,
                     projectName: props.projectSelected,
                     formName: props.formSelected,
                     setFormData: props.setFormData,
+                    setShowRawData: props.setShowRawData,
+                    setUserInfo:props.setUserInfo
                   });
                   props.setLoading(false);
                 }}>
@@ -798,12 +804,36 @@ function RenderRawDataCard(props) {
                 </Button>
               </a>
 
+              <Button style={{ margin: "2px" }} className="bg-dark border-0" onClick={async ()=>{
+                 props.setLoading(true);
+                 await ProcessData({
+                   commandType: "units",
+                   formSelected: props.formSelected,
+                   projectSelected: props.projectSelected,
+                   process_label: "Extracting Units",
+                   data: props.userInfo,
+                   authToken: props.authToken,
+                 });
+
+                 await GetInformationForFormComponent({
+                   setAuthToken: props.setAuthToken,
+                   authToken: props.authToken,
+                   setUserInfo: props.setUserInfo,
+                   projectName: props.projectSelected,
+                   formName: props.formSelected,
+                   setFormData: props.setFormData,
+                   setShowRawData: props.setShowRawData,
+                   setUserInfo:props.setUserInfo
+                 });
+                 props.setLoading(false);
+              }}>Extract Units</Button>
+
               
             </>
           
           </div>
           <div style={{ marginLeft: "auto", marginRight: 0 }}>
-          Last Updated: {props.formData.time_updated.unitsExtracted}
+          Last Updated: {props.formData.time_updated.rawDataExtracted}
           </div>
         </div>
       </Card.Body>
@@ -814,7 +844,7 @@ function RenderRawDataCard(props) {
 function RenderDataCard(props) {
   return (
     <>
-      {props.showUnits ? <RenderRawDataCard {...props} /> : <></>}
+      {props.showRawData ? <RenderRawDataCard {...props} /> : <></>}
 
       {props.showUnits ? <RenderUnitsForm {...props} /> : <></>}
       {props.showPrices ? (
@@ -1044,11 +1074,17 @@ function RenderSpinner() {
 }
 
 async function CheckFormData(props) {
-  if (props.formData.unitsExtracted == true) {
+
+  console.log("Checking form data")
+  console.log(props)
+
+
+  if (props.formData.rawDataExtracted == true) {
     // Extract Units
-    props.setShowUnits(true);
+    props.setShowRawData(true);
   }
-  if (props.formData.unitsExtracted == false) {
+  
+  if (props.formData.rawDataExtracted == false) {
     // Store.addNotification({
     //   id: 'unit_extraction',
     //   title: "Extracting Units",
@@ -1061,10 +1097,10 @@ async function CheckFormData(props) {
     // });
     props.setLoading(true);
     const processing_result = await ProcessData({
-      commandType: "units",
+      commandType: "raw-data",
       formSelected: props.formSelected,
       projectSelected: props.projectSelected,
-      process_label: "Unit Extraction",
+      process_label: "Extraction of Raw Data",
       data: props.data,
       authToken: props.authToken,
       setLoading: props.setLoading,
@@ -1078,11 +1114,18 @@ async function CheckFormData(props) {
         projectName: props.projectSelected,
         formName: props.formSelected,
         setFormData: props.setFormData,
+        setShowRawData: props.setShowRawData,
+        userInfo:props.setUserInfo
       });
       props.setLoading(false);
 
       Store.removeNotification("unit_extraction");
     }
+  }
+
+  if (props.formData.unitsExtracted == true) {
+    // Extract Units
+    props.setShowUnits(true);
   }
 
   if (props.formData.pricesCalculated == true) {
@@ -1115,6 +1158,8 @@ export default function DataAccessComponent() {
   const [showPrices, setShowPrices] = useState(false);
   const [showOutputs, setShowOutputs] = useState(false);
 
+  const [showRawData, setShowRawData] = useState(false)
+
   useEffect(() => {
     async function CheckLoggedIn() {
       const logged_in = await CheckForLocalToken({
@@ -1138,12 +1183,11 @@ export default function DataAccessComponent() {
         projectName: projectSelected,
         formName: formSelected,
         setFormData: setFormData,
+        setShowRawData: setShowRawData,
+        setUserInfo:setAdminData
       });
       setLoading(false);
-      // const response = await FetchUserInformation({
-      //     authToken: authToken,
-      //     setUserInfo: setAdminData
-      // })
+  
     }
     GetUserInfo();
   }, [authToken]);
@@ -1170,6 +1214,8 @@ export default function DataAccessComponent() {
         setShowPrices: setShowPrices,
         setShowOutputs: setShowOutputs,
         setLoading: setLoading,
+
+        setShowRawData: setShowRawData
       });
     }
 
@@ -1193,12 +1239,14 @@ export default function DataAccessComponent() {
                 projectSelected: projectSelected,
                 formSelected: formSelected,
                 showUnits: showUnits,
+                showRawData: showRawData,
                 userInfo: adminData,
                 showPrices: showPrices,
                 showOutputs: showOutputs,
                 setAuthToken: setAuthToken,
                 setFormData: setFormData,
                 setLoading: setLoading,
+                setUserInfo:setAdminData,
                 doc_extension:
                   "source/user-guide/processing-data.html#managing-data",
               })
