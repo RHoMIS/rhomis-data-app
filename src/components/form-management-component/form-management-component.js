@@ -12,7 +12,7 @@ import "../project-management-component/project-management-component.css";
 import "./form-management-component.css";
 import "../../App.css";
 
-import {CheckForLocalToken} from '../fetching-context-info/fetching-context-info'
+import { CheckForLocalToken } from "../fetching-context-info/fetching-context-info";
 
 import { useHistory } from "react-router";
 
@@ -21,7 +21,7 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import MainCard from "../main-card-component/main-card-component";
 
 /*
- Format date so it appears correctly 
+ Format date so it appears correctly
  */
 function formatDate(date) {
   var d = new Date(date),
@@ -38,30 +38,25 @@ function formatDate(date) {
 function NoInfoFound(props) {
   return (
     <>
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Form Name</th>
-          <th>Status</th>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Form Name</th>
+            <th>Status</th>
 
-          <th>Created At</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td colSpan={3}>Forms Not Found</td>
-        </tr>
-      </tbody>
-    </Table>
-    <form method="post" action={process.env.REACT_APP_SURVEY_BUILDER_URL} class="inline">
-                    <input type="hidden" name="token" value={props.authToken} />
-                    <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
-            <div style={{ display: "inline-grid", width: "100%" }}>
-                <div style={{ marginLeft: "auto", marginRight: 0 }}>
-                <Button type="submit" className='bg-dark border-0'>New Form</Button>
-                </div>
-                </div>
-                </form>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colSpan={3}>Forms Not Found</td>
+          </tr>
+        </tbody>
+      </Table>
+      <ProjectNewForm
+        authToken={props.authToken}
+        projectSelected={props.projectSelected}
+      />
     </>
   );
 }
@@ -104,14 +99,13 @@ function SubmissionsCount(props) {
   if (props.draftOrLive === "live") {
     submissions = props.form.submissions.live;
   }
-  console.log("Submissions props")
+  console.log("Submissions props");
 
-  console.log(props)
-  console.log(submissions)
-  if (submissions===null){
-    submissions='NA'
+  console.log(props);
+  console.log(submissions);
+  if (submissions === null) {
+    submissions = "NA";
   }
-
 
   return (
     <>
@@ -130,22 +124,20 @@ function SubmissionsCount(props) {
   );
 }
 
-
 async function FinalizeForm(props) {
-
-  console.log("Finalizing form")
-  console.log(props)
+  console.log("Finalizing form");
+  console.log(props);
   const result = await axios({
-      method: 'post',
-      url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/forms/publish",
-      headers: {
-          'Authorization': props.authToken
-      },
-      params: {
-          form_name: props.form,
-          project_name: props.project
-      }
-  })
+    method: "post",
+    url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/forms/publish",
+    headers: {
+      Authorization: props.authToken,
+    },
+    params: {
+      form_name: props.form,
+      project_name: props.project,
+    },
+  });
 }
 
 // Render the options button for each form
@@ -183,7 +175,8 @@ function FormOptions(props) {
         title="Options"
         variant="dark"
         menuVariant="dark border-0"
-        drop="end">
+        drop="end"
+      >
         {/* LIVE FORMS OPTIONS */}
         {render_live ? (
           <>
@@ -199,14 +192,16 @@ function FormOptions(props) {
                     props.form.name +
                     "/collect/live"
                 );
-              }}>
+              }}
+            >
               Collect Data
             </Dropdown.Item>
 
             <form
               method="post"
               action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-              class="inline">
+              class="inline"
+            >
               <input type="hidden" name="token" value={props.authToken} />
               <input
                 type="hidden"
@@ -238,7 +233,8 @@ function FormOptions(props) {
                       props.form.name +
                       "/data"
                   );
-                }}>
+                }}
+              >
                 Access Data
               </Dropdown.Item>
             ) : (
@@ -263,13 +259,15 @@ function FormOptions(props) {
                     props.form.name +
                     "/collect/draft"
                 );
-              }}>
+              }}
+            >
               Test Survey
             </Dropdown.Item>
             <form
               method="post"
               action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-              class="inline">
+              class="inline"
+            >
               <input type="hidden" name="token" value={props.authToken} />
               <input
                 type="hidden"
@@ -280,7 +278,6 @@ function FormOptions(props) {
                 Edit Draft
               </button>
             </form>
-
           </>
         ) : (
           <></>
@@ -297,7 +294,8 @@ function FormOptions(props) {
                 props.form.name +
                 "/users"
             );
-          }}>
+          }}
+        >
           Manage Users
         </Dropdown.Item>
       </DropdownButton>
@@ -317,13 +315,13 @@ function FormTables(props) {
   // the component is has all of the
   // form data needed for the table
   if (!props.data) {
-    return <NoInfoFound authToken={props.authToken}/>;
+    return <NoInfoFound authToken={props.authToken} />;
   }
   if (!props.data.user) {
-    return <NoInfoFound authToken={props.authToken}/>;
+    return <NoInfoFound authToken={props.authToken} />;
   }
   if (!props.data.user.roles) {
-    return <NoInfoFound authToken={props.authToken}/>;
+    return <NoInfoFound authToken={props.authToken} />;
   }
   if (props.data.user.roles.projectManager !== undefined) {
     if (props.data.user.roles.projectManager.includes(props.projectSelected))
@@ -343,124 +341,120 @@ function FormTables(props) {
     }
   }
 
-  
   return (
     <>
-    <Table striped bordered hover>
-      <thead>
-        <tr>
-          <th>Form Name</th>
-          <th>Draft Version</th>
-          <th>Draft Submissions</th>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Form Name</th>
+            <th>Draft Version</th>
+            <th>Draft Submissions</th>
 
-          <th>Live Version</th>
-          <th>Live Submissions</th>
+            <th>Live Version</th>
+            <th>Live Submissions</th>
 
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {formsExist ? (
-          props.data.forms.map((form) => {
-
-            let draft_version = "NA"
-            if (form.draft){
-              draft_version = form.draftVersion
-            }
-
-            if (form.draftVersion===undefined| form.draftVersion==='' | form.draftVersion===null){
-              draft_version = "NA"
-            }
-
-            let live_version = "NA"
-            if (form.draft){
-              live_version = form.liveVersion
-            }
-
-            if (form.liveVersion===undefined | form.liveVersion==='' | form.liveVersion===null ){
-              live_version = "NA"
-            }
-
-
-            // let date = new Date(form.createdAt)
-            let dateString = formatDate(form.createdAt);
-            if (form.project === props.projectSelected) {
-              let disableButton = true;
-
-              let accessData = false;
-
-              if (allowToFinalize === false) {
-                disableButton = false;
-              }
-
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {formsExist ? (
+            props.data.forms.map((form) => {
+              let draft_version = "NA";
               if (form.draft) {
-                disableButton = false;
+                draft_version = form.draftVersion;
               }
 
-              if (form.submissions > 0) {
-                accessData = true;
+              if (
+                (form.draftVersion === undefined) |
+                (form.draftVersion === "") |
+                (form.draftVersion === null)
+              ) {
+                draft_version = "NA";
               }
 
-              return (
-                <tr>
-                  <td >{form.name}</td>
-                  <td >
-                    {draft_version}
-                  </td>
-                  <td >
-                    <SubmissionsCount
-                      submissionsLoading={props.submissionsLoading}
-                      form={form}
-                      draftOrLive="draft"
-                    />
-                  </td>
+              let live_version = "NA";
+              if (form.draft) {
+                live_version = form.liveVersion;
+              }
 
-                  <td >
-                    {live_version}
-                  </td>
+              if (
+                (form.liveVersion === undefined) |
+                (form.liveVersion === "") |
+                (form.liveVersion === null)
+              ) {
+                live_version = "NA";
+              }
 
-                  <td >
-                    <SubmissionsCount
-                      submissionsLoading={props.submissionsLoading}
-                      form={form}
-                      draftOrLive="live"
-                    />
-                  </td>
+              // let date = new Date(form.createdAt)
+              let dateString = formatDate(form.createdAt);
+              if (form.project === props.projectSelected) {
+                let disableButton = true;
 
-                  <td style={{ "text-align": "center" }}>
-                    <FormOptions
-                      history={history}
-                      form={form}
-                      projectSelected={props.projectSelected}
-                      authToken={props.authToken}
-                      accessData={accessData}
-                    />
-                  </td>
-                </tr>
-              );
-            }
-          })
-        ) : (
-          <>
-            <tr>
-              <td style={{ "text-align": "center" }} colSpan={5}>
-                No forms created yet
-              </td>
-            </tr>
-          </>
-        )}
-        {/* <tr><td style={{ "text-align": "center" }} colSpan={5}><a href="https://rhomis-survey.stats4sdtest.online"><Button >Start Creating a Survey</Button></a></td></tr></>} */}
-      </tbody>
-    </Table>
-    <form method="post" action={process.env.REACT_APP_SURVEY_BUILDER_URL} class="inline">
-                    <input type="hidden" name="token" value={props.authToken} />
-                    <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
-            <div style={{ display: "inline-grid", width: "100%" }}>
-                <div style={{ marginLeft: "auto", marginRight: 0 }}>
-                <Button type="submit" className='bg-dark border-0'>New Form</Button>
-                </div>
-                </div>
-                </form>
+                let accessData = false;
+
+                if (allowToFinalize === false) {
+                  disableButton = false;
+                }
+
+                if (form.draft) {
+                  disableButton = false;
+                }
+
+                if (form.submissions > 0) {
+                  accessData = true;
+                }
+
+                return (
+                  <tr>
+                    <td>{form.name}</td>
+                    <td>{draft_version}</td>
+                    <td>
+                      <SubmissionsCount
+                        submissionsLoading={props.submissionsLoading}
+                        form={form}
+                        draftOrLive="draft"
+                      />
+                    </td>
+
+                    <td>{live_version}</td>
+
+                    <td>
+                      <SubmissionsCount
+                        submissionsLoading={props.submissionsLoading}
+                        form={form}
+                        draftOrLive="live"
+                      />
+                    </td>
+
+                    <td style={{ "text-align": "center" }}>
+                      <FormOptions
+                        history={history}
+                        form={form}
+                        projectSelected={props.projectSelected}
+                        authToken={props.authToken}
+                        accessData={accessData}
+                      />
+                    </td>
+                  </tr>
+                );
+              }
+            })
+          ) : (
+            <>
+              <tr>
+                <td style={{ "text-align": "center" }} colSpan={5}>
+                  No forms created yet
+                </td>
+              </tr>
+            </>
+          )}
+          {/* <tr><td style={{ "text-align": "center" }} colSpan={5}><a href="https://rhomis-survey.stats4sdtest.online"><Button >Start Creating a Survey</Button></a></td></tr></>} */}
+        </tbody>
+      </Table>
+      <ProjectNewForm
+        authToken={props.authToken}
+        projectSelected={props.projectSelected}
+      />
     </>
   );
 }
@@ -486,21 +480,19 @@ function RenderProjectAdmin(props) {
   }
 
   return (
-    <div style={{"width":'100%'}}>
-     
-          {/* <Card.Title>Special title treatment</Card.Title> */}
-          <FormTables
-            submissionsLoading={props.submissionsLoading}
-            projectSelected={props.projectSelected}
-            authToken={props.authToken}
-            setAdminData={props.setAdminData}
-            data={props.data}
-            filters={props.filters}
-            setFilters={props.setFilters}
-            setFormSelected={props.setFormSelected}
-          />
-     
-    </div >
+    <div style={{ width: "100%" }}>
+      {/* <Card.Title>Special title treatment</Card.Title> */}
+      <FormTables
+        submissionsLoading={props.submissionsLoading}
+        projectSelected={props.projectSelected}
+        authToken={props.authToken}
+        setAdminData={props.setAdminData}
+        data={props.data}
+        filters={props.filters}
+        setFilters={props.setFilters}
+        setFormSelected={props.setFormSelected}
+      />
+    </div>
   );
 }
 
@@ -523,22 +515,17 @@ function FormManagementComponent() {
   const [filters, setFilters] = useState([]);
   const data = null;
 
-
   useEffect(() => {
-
-    async function CheckLoggedIn(){
+    async function CheckLoggedIn() {
       const logged_in = await CheckForLocalToken({
-        setAuthToken: setAuthToken
-      }
-      )
-      if (logged_in==false){
-        history.push("/logout")
+        setAuthToken: setAuthToken,
+      });
+      if (logged_in == false) {
+        history.push("/logout");
       }
     }
 
-    CheckLoggedIn()
-
-   
+    CheckLoggedIn();
   }, []);
 
   useEffect(async () => {
@@ -556,37 +543,51 @@ function FormManagementComponent() {
     }
 
     GetUserInfo();
-},[authToken])
-
-
-  
+  }, [authToken]);
 
   return (
-<>
-    <MainCard
-    
-    CardTitle="Form Overview"
-    filters={[projectSelected]}
-    history={history}
-    back_link="/projects"
-    doc_extension="source/user-guide/navigating-the-app.html#form-overview"
-    CardBody={
-      RenderProjectAdmin({
-          authToken:authToken,
-            projectSelected:projectSelected,
-            formSelected:formSelected,
-            setAdminData:setAdminData,
-            data:adminData,
-            setFormSelected:setFormSelected,
-            filters:filters,
-            setFilters:setFilters,
-            submissionsLoading:submissionsLoading
-        })}    
-    >
-    </MainCard>
-
-
+    <>
+      <MainCard
+        CardTitle="Form Overview"
+        filters={[projectSelected]}
+        history={history}
+        back_link="/projects"
+        doc_extension="source/user-guide/navigating-the-app.html#form-overview"
+        CardBody={RenderProjectAdmin({
+          authToken: authToken,
+          projectSelected: projectSelected,
+          formSelected: formSelected,
+          setAdminData: setAdminData,
+          data: adminData,
+          setFormSelected: setFormSelected,
+          filters: filters,
+          setFilters: setFilters,
+          submissionsLoading: submissionsLoading,
+        })}
+      ></MainCard>
     </>
+  );
+}
+
+// Create New form for this project button
+function ProjectNewForm(props) {
+  return (
+    <form
+      method="post"
+      action={process.env.REACT_APP_SURVEY_BUILDER_URL}
+      class="inline"
+    >
+      <input type="hidden" name="project_name" value={props.projectSelected} />
+      <input type="hidden" name="token" value={props.authToken} />
+      <input type="hidden" name="redirect_url" value="/admin/xlsform/create" />
+      <div style={{ display: "inline-grid", width: "100%" }}>
+        <div style={{ marginLeft: "auto", marginRight: 0 }}>
+          <Button type="submit" className="bg-dark border-0">
+            New Form
+          </Button>
+        </div>
+      </div>
+    </form>
   );
 }
 
