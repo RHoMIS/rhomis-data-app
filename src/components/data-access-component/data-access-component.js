@@ -713,7 +713,7 @@ function RenderRawDataCard(props) {
   let show_tick = true;
 
   useEffect(() => {
-    console.log('Units props')
+    console.log('Raw data props')
 
     console.log(props)
     async function FetchRawData() {

@@ -258,7 +258,7 @@ function CardBody(props) {
           <input
             type="hidden"
             name="redirect_url"
-            value={"/xlsform/" + props.formState.formSelected + "/edit"}
+            value={"/xlsform/" + props.formSelected + "/edit"}
           />
           <Button
             variant="dark"
