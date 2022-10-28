@@ -203,6 +203,12 @@ function CardBody(props) {
   console.log("Card body props");
   console.log(props);
 
+  const [formEditURL,setFormEditURL] = useState('')
+
+  useEffect(()=>{
+    setFormEditURL("/xlsform/" + props.formSelected + "/edit")
+  },[])
+
   return (
     <div style={{'text-align':'center'}}>
       
@@ -258,7 +264,7 @@ function CardBody(props) {
           <input
             type="hidden"
             name="redirect_url"
-            value={"/xlsform/" + props.formSelected + "/edit"}
+            value={  formEditURL}
           />
           <Button
             variant="dark"
