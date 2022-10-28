@@ -373,7 +373,7 @@ function FormTables(props) {
               }
 
               let live_version = "NA";
-              if (form.draft) {
+              if (!form.draft) {
                 live_version = form.liveVersion;
               }
 
