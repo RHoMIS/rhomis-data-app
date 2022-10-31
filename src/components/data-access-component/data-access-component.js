@@ -418,7 +418,7 @@ function RenderFinalOutputs(props) {
 }
 
 function RenderConversionTable(props) {
-  // console.log(props);
+  // whenever the
 
   return (
     <div className="table-div">
@@ -527,7 +527,8 @@ async function FetchData(props) {
 }
 
 function UpdateUnitsData(props) {
-  // console.log(props);
+  console.log("UPDATE UNIT DATA");
+  console.log(props);
 
   let changing_units = props.unitsData;
 
@@ -544,6 +545,7 @@ function UpdateUnitsData(props) {
 
   changing_units[index].conversion = props.update;
 
+  console.log(changing_units);
   props.setUnitsData(changing_units);
 }
 
