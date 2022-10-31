@@ -174,7 +174,8 @@ function FormOptions(props) {
       <DropdownButton
         title="Options"
         variant="dark"
-        menuVariant="dark border-0"
+        menuVariant="dark"
+        className="border-0"
         drop="end"
       >
         {/* LIVE FORMS OPTIONS */}

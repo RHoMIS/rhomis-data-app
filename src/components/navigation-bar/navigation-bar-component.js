@@ -17,7 +17,7 @@ this with the Nav.Link component
 
 async function GetAdminData(props) {
   const result = await axios({
-    method: "get",
+    method: "post",
     url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/meta-data",
     headers: {
       Authorization: props.authToken,
