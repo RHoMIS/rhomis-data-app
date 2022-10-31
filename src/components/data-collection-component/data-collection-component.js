@@ -22,7 +22,7 @@ import axios from "axios";
 import MainCard from "../main-card-component/main-card-component";
 
 async function ProcessData(props) {
-  console.log(props);
+  // console.log(props);
   const form = props.data.forms.filter(
     (item) =>
       item.name === props.formSelected && item.project === props.projectSelected
@@ -174,9 +174,9 @@ function SetInitialFormState(props) {
     formSelected: props.formSelected,
     draftOrLive: props.draftOrLive,
   });
-  console.log("odkConf");
+  // console.log("odkConf");
 
-  console.log(odkConf);
+  // console.log(odkConf);
 
   let draft = false;
   let live = false;
@@ -200,8 +200,8 @@ function SetInitialFormState(props) {
 }
 
 function CardBody(props) {
-  console.log("Card body props");
-  console.log(props);
+  // console.log("Card body props");
+  // console.log(props);
 
   const [formEditURL, setFormEditURL] = useState("");
 
@@ -242,7 +242,7 @@ function CardBody(props) {
                                 formSelected: props.formSelected,
                                 projectSelected: props.projectSelected
                             })
-                            console.log("Finished Generating Data")
+                            // console.log("Finished Generating Data")
                         }}
 
                     >Generate Mock Submissions</Button> */}
@@ -335,9 +335,9 @@ export default function DataCollectionComponent() {
       draftOrLive: draftOrLive,
     });
 
-    console.log("Setting initial state");
-    console.log(new_form_state);
-    console.log(adminData);
+    // console.log("Setting initial state");
+    // console.log(new_form_state);
+    // console.log(adminData);
 
     setInitialState(new_form_state);
   }, [adminData]);

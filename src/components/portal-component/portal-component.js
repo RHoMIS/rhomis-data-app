@@ -43,7 +43,7 @@ async function FetchProjectInformation(authToken) {
       Authorization: authToken,
     },
   });
-  console.log(response.data);
+  // console.log(response.data);
 
   return response.data;
 }
@@ -86,9 +86,9 @@ function PortalCard(props) {
   }
 
   if ((props.data.external === true) & (props.data.label === "surveyBuilder")) {
-    console.log("Auth token");
+    // console.log("Auth token");
 
-    console.log(props.authToken);
+    // console.log(props.authToken);
     return (
       <div>
         <form method="post" action={props.data.link} className="inline">
@@ -202,8 +202,8 @@ function PortalCard(props) {
 
 function RenderPortalCards(props) {
   const portalCardData = [];
-  console.log(props.data[0]);
-  console.log(props.userData);
+  // console.log(props.data[0]);
+  // console.log(props.userData);
 
   if (props.userData) {
     if (props.userData.basic === true) {

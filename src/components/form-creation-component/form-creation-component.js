@@ -37,7 +37,7 @@ import { useHistory } from "react-router-dom";
 import { CheckForLocalToken } from "../fetching-context-info/fetching-context-info";
 
 async function GetProjectInformation(props) {
-  console.log("authToken: ", props.authToken);
+  // console.log("authToken: ", props.authToken);
   const result = await axios({
     method: "post",
     url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/meta-data",
@@ -46,11 +46,11 @@ async function GetProjectInformation(props) {
     },
   });
 
-  console.log("response: ");
-  console.log(result);
+  // console.log("response: ");
+  // console.log(result);
   if (result.status === 200) {
-    console.log("Setting project information");
-    console.log(result.data);
+    // console.log("Setting project information");
+    // console.log(result.data);
     props.setProjectInformation(result.data);
   }
   if (result.status === 400) {
@@ -59,8 +59,8 @@ async function GetProjectInformation(props) {
 }
 
 async function CreateProject(authToken, projectName, projectDescription) {
-  console.log(projectName);
-  console.log(authToken);
+  // console.log(projectName);
+  // console.log(authToken);
 
   // Create project
   const projectCreationResponse = await axios({
@@ -79,8 +79,8 @@ async function CreateProject(authToken, projectName, projectDescription) {
 }
 
 async function DeleteProject(authToken, projectName) {
-  console.log(projectName);
-  console.log(authToken);
+  // console.log(projectName);
+  // console.log(authToken);
 
   // Create project
   const projectCreationResponse = await axios({
@@ -104,7 +104,7 @@ async function CreateForm(
   formVersion,
   formFile
 ) {
-  console.log(projectName);
+  // console.log(projectName);
   console.log(
     process.env.REACT_APP_AUTHENTICATOR_URL +
       "api/forms/new?form_name=" +
@@ -204,11 +204,11 @@ function CreateProjectForm(props) {
 // (i.e a form that does not exist already in
 // in the db).
 function CreateNewBlankForm(props) {
-  console.log("Draft form data");
+  // console.log("Draft form data");
 
   const [formList, setFormList] = useState([]);
 
-  console.log(props.data);
+  // console.log(props.data);
   let projectList = ["No Projects"];
   let projectDisabled = true;
 
@@ -225,9 +225,9 @@ function CreateNewBlankForm(props) {
       projectDisabled = true;
     }
   }
-  console.log(projectList);
+  // console.log(projectList);
 
-  console.log(props.data);
+  // console.log(props.data);
 
   return (
     <>
@@ -326,11 +326,11 @@ function CreateNewBlankForm(props) {
 }
 
 function UpdateDraftForm(props) {
-  console.log("Draft form data");
+  // console.log("Draft form data");
 
   const [formList, setFormList] = useState([]);
 
-  console.log(props.data);
+  // console.log(props.data);
   let projectList = ["No Projects"];
   let projectDisabled = true;
 
@@ -347,9 +347,9 @@ function UpdateDraftForm(props) {
       projectDisabled = true;
     }
   }
-  console.log(projectList);
+  // console.log(projectList);
 
-  console.log(props.data);
+  // console.log(props.data);
 
   return (
     <>
@@ -477,11 +477,11 @@ function UpdateDraftForm(props) {
 }
 
 function FinalizeFormEntry(props) {
-  console.log("Draft form data");
+  // console.log("Draft form data");
 
   const [formList, setFormList] = useState([]);
 
-  console.log(props.data);
+  // console.log(props.data);
   let projectList = ["No Projects"];
   let projectDisabled = true;
 
@@ -498,9 +498,9 @@ function FinalizeFormEntry(props) {
       projectDisabled = true;
     }
   }
-  console.log(projectList);
+  // console.log(projectList);
 
-  console.log(props.data);
+  // console.log(props.data);
 
   return (
     <>
@@ -543,8 +543,8 @@ function FinalizeFormEntry(props) {
           <Form.Select
             defaultValue="Select a form"
             onChange={(event) => {
-              console.log("Form name seleceted");
-              console.log(event.target.value);
+              // console.log("Form name seleceted");
+              // console.log(event.target.value);
               props.setNewDraftFormName(event.target.value);
             }}
             aria-label="Default select example"
@@ -577,8 +577,8 @@ function FinalizeFormEntry(props) {
 }
 
 async function FinalizeForm(props) {
-  console.log("Finalizing form");
-  console.log(props);
+  // console.log("Finalizing form");
+  // console.log(props);
   const result = await axios({
     method: "post",
     url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/forms/publish",
@@ -596,7 +596,7 @@ async function FinalizeForm(props) {
 // allow administrator to delete any of the
 // individual projects
 function RenderProjectInformation(props) {
-  console.log(props);
+  // console.log(props);
   if (!props.data) {
     return (
       <div>
@@ -673,7 +673,7 @@ async function AddAdministrator(props) {
       },
     });
 
-    console.log(result);
+    // console.log(result);
 
     return result.data;
   } catch (err) {}

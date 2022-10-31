@@ -63,7 +63,7 @@ async function FetchData(props) {
 }
 
 function RenderConversionTable(props) {
-  console.log(props);
+  // console.log(props);
 
   return (
     <div className="table-div">
@@ -127,7 +127,7 @@ function RenderConversionTable(props) {
 }
 
 function UpdateUnitsData(props) {
-  console.log(props);
+  // console.log(props);
 
   let changing_units = props.unitsData;
 
@@ -140,7 +140,7 @@ function UpdateUnitsData(props) {
       return true;
     }
   });
-  console.log(index);
+  // console.log(index);
 
   changing_units[index].conversion = props.update;
 
@@ -148,7 +148,7 @@ function UpdateUnitsData(props) {
 }
 
 async function SubmitUnitsData(props) {
-  console.log(props.unitsData);
+  // console.log(props.unitsData);
 
   try {
     const result = await axios({
@@ -181,7 +181,7 @@ async function SubmitUnitsData(props) {
     }
     return result;
   } catch (err) {
-    console.log(err.response);
+    // console.log(err.response);
     Store.addNotification({
       title: "Error",
       message: err.response.data,
@@ -208,7 +208,7 @@ function ShowUnitsForm(props) {
   ]);
 
   const [submitAllUnits, setSubmitAllUnits] = useState(false);
-  console.log(props);
+  // console.log(props);
 
   const pricesNames = [
     "mean_crop_price_lcu_per_kg",
@@ -227,8 +227,8 @@ function ShowUnitsForm(props) {
     "livestock_count_to_tlu",
   ];
   useEffect(() => {
-    console.log("Units");
-    console.log(unitsData);
+    // console.log("Units");
+    // console.log(unitsData);
   }, [unitsData]);
 
   return (
@@ -385,7 +385,7 @@ function ShowUnitsForm(props) {
 }
 
 async function ProcessData(props) {
-  console.log(props);
+  // console.log(props);
   const form = props.data.forms.filter(
     (item) =>
       item.name === props.formSelected && item.project === props.projectSelected
@@ -436,7 +436,7 @@ async function ProcessData(props) {
     }
     return true;
   } catch (err) {
-    console.log(err.response);
+    // console.log(err.response);
     Store.addNotification({
       title: "Error",
       message: err.response.data,
@@ -577,8 +577,8 @@ function RenderPriceAndCalorieConversions(props) {
 }
 
 async function RetrieveZipFile(props) {
-  console.log(props);
-  console.log(process.env.REACT_APP_API_URL + "api/data/all-data");
+  // console.log(props);
+  // console.log(process.env.REACT_APP_API_URL + "api/data/all-data");
 
   const response = await axios({
     method: "post",
@@ -592,7 +592,7 @@ async function RetrieveZipFile(props) {
       Authorization: props.authToken,
     },
   });
-  console.log(response.data);
+  // console.log(response.data);
 
   props.setDataDownloadLink(
     generateZipDownloadLink(response.data, props.dataDownloadLink)
@@ -723,9 +723,9 @@ function RenderRawDataCard(props) {
   let show_tick = true;
 
   useEffect(() => {
-    console.log("Raw data props");
+    // console.log("Raw data props");
 
-    console.log(props);
+    // console.log(props);
     async function FetchRawData() {
       const NewRawUnitsData = await FetchData({
         authToken: props.authToken,
@@ -744,7 +744,7 @@ function RenderRawDataCard(props) {
 
   useEffect(() => {
     if (rawData) {
-      console.log(rawData);
+      // console.log(rawData);
       const raw_data_download_link = generateDataDownloadLink(
         rawData,
         dataDownload
@@ -873,7 +873,7 @@ function RenderDataCard(props) {
 function CheckDataStatus() {}
 
 function renderTable(data) {
-  // console.log(data)
+  // // console.log(data)
 
   if (data !== null) {
     var full_data_set = data;
@@ -1088,8 +1088,8 @@ function RenderSpinner() {
 }
 
 async function CheckFormData(props) {
-  console.log("Checking form data");
-  console.log(props);
+  // console.log("Checking form data");
+  // console.log(props);
 
   if (props.formData.rawDataExtracted == true) {
     // Extract Units
@@ -1186,7 +1186,7 @@ export default function DataAccessComponent() {
   }, []);
 
   useEffect(async () => {
-    console.log("getting user info");
+    // console.log("getting user info");
     async function GetUserInfo() {
       await GetInformationForFormComponent({
         setAuthToken: setAuthToken,
@@ -1204,8 +1204,8 @@ export default function DataAccessComponent() {
   }, [authToken]);
 
   useEffect(() => {
-    console.log("Form Data");
-    console.log(formData);
+    // console.log("Form Data");
+    // console.log(formData);
 
     async function CheckAndUpdateFormInformation() {
       await CheckFormData({

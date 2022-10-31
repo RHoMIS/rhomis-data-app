@@ -99,10 +99,10 @@ function SubmissionsCount(props) {
   if (props.draftOrLive === "live") {
     submissions = props.form.submissions.live;
   }
-  console.log("Submissions props");
+  // console.log("Submissions props");
 
-  console.log(props);
-  console.log(submissions);
+  // console.log(props);
+  // console.log(submissions);
   if (submissions === null) {
     submissions = "NA";
   }
@@ -125,8 +125,8 @@ function SubmissionsCount(props) {
 }
 
 async function FinalizeForm(props) {
-  console.log("Finalizing form");
-  console.log(props);
+  // console.log("Finalizing form");
+  // console.log(props);
   const result = await axios({
     method: "post",
     url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/forms/publish",
@@ -142,8 +142,8 @@ async function FinalizeForm(props) {
 
 // Render the options button for each form
 function FormOptions(props) {
-  console.log("Form Options Props");
-  console.log(props);
+  // console.log("Form Options Props");
+  // console.log(props);
 
   let render_live = false;
   let render_draft = false;
@@ -405,7 +405,7 @@ function FormTables(props) {
                 }
 
                 return (
-                  <tr>
+                  <tr key={form.name}>
                     <td>{form.name}</td>
                     <td>{draft_version}</td>
                     <td>
@@ -508,8 +508,8 @@ function FormManagementComponent() {
 
   const [formData, setFormData] = useState();
 
-  console.log("admin data");
-  console.log(adminData);
+  // console.log("admin data");
+  // console.log(adminData);
 
   const [formSelected, setFormSelected] = useState(null);
   const [filters, setFilters] = useState([]);
@@ -529,7 +529,7 @@ function FormManagementComponent() {
   }, []);
 
   useEffect(async () => {
-    console.log("projectSelected:  " + projectSelected);
+    // console.log("projectSelected:  " + projectSelected);
 
     async function GetUserInfo() {
       await FetchUserInformation({

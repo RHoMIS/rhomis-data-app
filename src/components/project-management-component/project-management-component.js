@@ -26,8 +26,8 @@ import {
 async function CreateProject(props) {
   props.setLoading(true);
 
-  console.log(props.projectName);
-  console.log(props.authToken);
+  // console.log(props.projectName);
+  // console.log(props.authToken);
 
   Store.addNotification({
     title: "Creating Project",
@@ -69,7 +69,7 @@ async function CreateProject(props) {
     }
     return projectCreationResponse;
   } catch (err) {
-    console.log(err.response);
+    // console.log(err.response);
     Store.addNotification({
       title: "Error",
       message: err.response.data,
@@ -139,7 +139,7 @@ function RenderProjectInformation(props) {
 
   const [loading, setLoading] = useState(false);
 
-  console.log(props);
+  // console.log(props);
   if (!props.data) {
     return (
       <NoProjectFound
@@ -308,7 +308,7 @@ export default function ProjectManagementComponent(props) {
   }, []);
 
   useEffect(async () => {
-    console.log("Effect running");
+    // console.log("Effect running");
     await FetchUserInformation({
       authToken: authToken,
       setUserInfo: setAdminData,
