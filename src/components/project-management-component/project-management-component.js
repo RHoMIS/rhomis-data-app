@@ -23,18 +23,41 @@ import {
   CheckForLocalToken,
 } from "../fetching-context-info/fetching-context-info";
 
-
-
 async function CreateProject(props) {
+  props.setLoading(true);
 
-    props.setLoading(true)
+  console.log(props.projectName);
+  console.log(props.authToken);
 
-    console.log(props.projectName)
-    console.log(props.authToken)
+  Store.addNotification({
+    title: "Creating Project",
+    type: "default",
+    insert: "top",
+    container: "top-right",
+    animationIn: ["animate__animated", "animate__fadeIn"],
+    animationOut: ["animate__animated", "animate__fadeOut"],
+    dismiss: {
+      duration: 2000,
+    },
+  });
+  try {
+    const projectCreationResponse = await axios({
+      method: "post",
+      url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/projects/create",
+      data: {
+        name: props.projectName,
+        description: props.projectDescription,
+      },
+      headers: {
+        Authorization: props.authToken,
+      },
+    });
 
-    Store.addNotification({
-        title: "Creating Project",
-        type: "default",
+    if (projectCreationResponse.status === 200) {
+      Store.addNotification({
+        title: "Success",
+        message: "Project Created",
+        type: "success",
         insert: "top",
         container: "top-right",
         animationIn: ["animate__animated", "animate__fadeIn"],
@@ -43,58 +66,29 @@ async function CreateProject(props) {
           duration: 2000,
         },
       });
-    try {
-        const projectCreationResponse = await axios({
-            method: "post",
-            url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/projects/create",
-            data: {
-                name: props.projectName,
-                description: props.projectDescription
-            },
-            headers: {
-                'Authorization': props.authToken
-            }
-        })
-    
-        if (projectCreationResponse.status === 200) {
-          Store.addNotification({
-            title: "Success",
-            message: "Project Created",
-            type: "success",
-            insert: "top",
-            container: "top-right",
-            animationIn: ["animate__animated", "animate__fadeIn"],
-            animationOut: ["animate__animated", "animate__fadeOut"],
-            dismiss: {
-              duration: 2000,
-            },
-          });
-        }
-        return projectCreationResponse;
-      } catch (err) {
-        console.log(err.response);
-        Store.addNotification({
-          title: "Error",
-          message: err.response.data,
-          type: "danger",
-          insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 2000,
-          },
-        });
-      }
+    }
+    return projectCreationResponse;
+  } catch (err) {
+    console.log(err.response);
+    Store.addNotification({
+      title: "Error",
+      message: err.response.data,
+      type: "danger",
+      insert: "top",
+      container: "top-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 2000,
+      },
+    });
+  }
 
-    // Create project
-    
+  // Create project
 
+  props.setLoading(false);
 
-    props.setLoading(false)
-
-
-    return 
+  return;
 }
 
 function NoProjectFound(props) {
@@ -110,7 +104,7 @@ function NoProjectFound(props) {
         </thead>
         <tbody>
           <tr>
-            <td style={{ "text-align": "center" }} colSpan={3}>
+            <td style={{ textAlign: "center" }} colSpan={3}>
               No projects found
             </td>
           </tr>
@@ -127,7 +121,8 @@ function NoProjectFound(props) {
                 authToken: props.authToken,
                 setUserInfo: props.setAdminData,
               });
-            }}>
+            }}
+          >
             New Project
           </Button>
         </div>
@@ -139,10 +134,10 @@ function NoProjectFound(props) {
 function RenderProjectInformation(props) {
   const history = useHistory();
 
-  const [newProjectName, setNewProjectName] = useState()
-  const [newProjectDescription, setNewProjectDescription] = useState()
+  const [newProjectName, setNewProjectName] = useState();
+  const [newProjectDescription, setNewProjectDescription] = useState();
 
-  const [loading,setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   console.log(props);
   if (!props.data) {
@@ -191,31 +186,36 @@ function RenderProjectInformation(props) {
               return (
                 <tr key={"table-row-" + index}>
                   <td
-                    style={{ "vertical-align": "middle" }}
-                    key={"table-row-" + index + "-item-1"}>
+                    style={{ verticalAlign: "middle" }}
+                    key={"table-row-" + index + "-item-1"}
+                  >
                     {project.name}
                   </td>
                   <td
-                    style={{ "vertical-align": "middle" }}
-                    key={"table-row-" + index + "-item-2"}>
+                    style={{ verticalAlign: "middle" }}
+                    key={"table-row-" + index + "-item-2"}
+                  >
                     {project.description}
                   </td>
                   <td
-                    style={{ "vertical-align": "middle" }}
-                    key={"table-row-" + index + "-item-3"}>
+                    style={{ verticalAlign: "middle" }}
+                    key={"table-row-" + index + "-item-3"}
+                  >
                     {dateString}
                   </td>
                   <td
                     style={{
-                      "vertical-align": "middle",
-                      "text-align": "center",
+                      verticalAlign: "middle",
+                      textAlign: "center",
                     }}
-                    key={"table-row-" + index + "-item-4"}>
+                    key={"table-row-" + index + "-item-4"}
+                  >
                     <Button
                       className="bg-dark text-white border-0"
                       onClick={() => {
                         history.push("/projects/" + project.name);
-                      }}>
+                      }}
+                    >
                       Select
                     </Button>
                   </td>
@@ -226,49 +226,61 @@ function RenderProjectInformation(props) {
         </Table>
 
         <div style={{ display: "inline-grid", width: "100%" }}>
-                <div style={{ marginLeft: "auto", marginRight: 0 }}>
+          <div style={{ marginLeft: "auto", marginRight: 0 }}>
+            <Form style={{ marginBottom: "10px", marginRight: 0 }}>
+              <Form.Group>
+                <Form.Label>
+                  <strong>New Project Name</strong>
+                </Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="New Project"
+                  onChange={(e) => {
+                    setNewProjectName(e.target.value);
+                  }}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>
+                  <strong>Project Description</strong>
+                </Form.Label>
+                <Form.Control
+                  type="textarea"
+                  placeholder="A short description..."
+                  rows={3}
+                  onChange={(e) => {
+                    setNewProjectDescription(e.target.value);
+                  }}
+                />
+              </Form.Group>
+            </Form>
+            <div style={{ display: "inline-grid", width: "100%" }}>
+              <div style={{ marginLeft: "auto", marginRight: 0 }}>
+                <Button
+                  type="submit"
+                  className="bg-dark border-0"
+                  onClick={async () => {
+                    await CreateProject({
+                      authToken: props.authToken,
+                      projectName: newProjectName,
+                      projectDescription: newProjectDescription,
+                      setLoading: setLoading,
+                    });
 
-                <Form style={{ marginBottom: "10px", marginRight: 0 }}>
-                <Form.Group>
-                    <Form.Label ><strong>New Project Name</strong></Form.Label>
-                    <Form.Control type="text" placeholder="New Project" onChange={(e)=>{
-                        setNewProjectName(e.target.value)
-                    }}/>
-</Form.Group>
-<Form.Group>
-
-<Form.Label ><strong>Project Description</strong></Form.Label>
-                    <Form.Control type="textarea" placeholder="A short description..." rows={3} onChange={(e)=>{
-                        setNewProjectDescription(e.target.value)
-                    }}/>
-                    </Form.Group>
-                </Form>
-                <div style={{ display: "inline-grid", width: "100%" }}>
-                <div style={{ marginLeft: "auto", marginRight: 0 }}>
-                <Button type="submit" className='bg-dark border-0'
-                
-                onClick={async()=>{
-
-                    await(CreateProject({
-                        authToken:props.authToken,
-                        projectName:newProjectName,
-                        projectDescription: newProjectDescription,
-                        setLoading: setLoading
-
-                }))
-
-                setLoading(true)
+                    setLoading(true);
                     await FetchUserInformation({
-                        authToken: props.authToken,
-                        setUserInfo: props.setAdminData
-                    })
-                    setLoading(true)
-
-                }}>Add Project</Button>
-                </div>
-                </div>
-                </div>
-                </div>
+                      authToken: props.authToken,
+                      setUserInfo: props.setAdminData,
+                    });
+                    setLoading(true);
+                  }}
+                >
+                  Add Project
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -315,8 +327,9 @@ export default function ProjectManagementComponent(props) {
           data: adminData,
           setProjectSelected: setProjectSelected,
           authToken: authToken,
-          setAdminData:setAdminData
-        })}></MainCard>
+          setAdminData: setAdminData,
+        })}
+      ></MainCard>
     </>
   );
 }

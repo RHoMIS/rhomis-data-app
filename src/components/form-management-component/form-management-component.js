@@ -200,7 +200,7 @@ function FormOptions(props) {
             <form
               method="post"
               action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-              class="inline"
+              className="inline"
             >
               <input type="hidden" name="token" value={props.authToken} />
               <input
@@ -266,7 +266,7 @@ function FormOptions(props) {
             <form
               method="post"
               action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-              class="inline"
+              className="inline"
             >
               <input type="hidden" name="token" value={props.authToken} />
               <input
@@ -426,7 +426,7 @@ function FormTables(props) {
                       />
                     </td>
 
-                    <td style={{ "text-align": "center" }}>
+                    <td style={{ textAlign: "center" }}>
                       <FormOptions
                         history={history}
                         form={form}
@@ -442,13 +442,13 @@ function FormTables(props) {
           ) : (
             <>
               <tr>
-                <td style={{ "text-align": "center" }} colSpan={5}>
+                <td style={{ textAlign: "center" }} colSpan={5}>
                   No forms created yet
                 </td>
               </tr>
             </>
           )}
-          {/* <tr><td style={{ "text-align": "center" }} colSpan={5}><a href="https://rhomis-survey.stats4sdtest.online"><Button >Start Creating a Survey</Button></a></td></tr></>} */}
+          {/* <tr><td style={{ "textAlign": "center" }} colSpan={5}><a href="https://rhomis-survey.stats4sdtest.online"><Button >Start Creating a Survey</Button></a></td></tr></>} */}
         </tbody>
       </Table>
       <ProjectNewForm
@@ -575,7 +575,7 @@ function ProjectNewForm(props) {
     <form
       method="post"
       action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-      class="inline"
+      className="inline"
     >
       <input type="hidden" name="project_name" value={props.projectSelected} />
       <input type="hidden" name="token" value={props.authToken} />

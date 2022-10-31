@@ -203,34 +203,35 @@ function CardBody(props) {
   console.log("Card body props");
   console.log(props);
 
-  const [formEditURL,setFormEditURL] = useState('')
+  const [formEditURL, setFormEditURL] = useState("");
 
-  useEffect(()=>{
-    setFormEditURL("/xlsform/" + props.formSelected + "/edit")
-  },[])
+  useEffect(() => {
+    setFormEditURL("/xlsform/" + props.formSelected + "/edit");
+  }, []);
 
   return (
-    <div style={{'text-align':'center'}}>
-      
-          <p><a href="https://docs.getodk.org/collect-install/" target="_blank">
-            1. Install ODK
-          </a></p>
-        <p>2. Open the ODK app</p>
-        <p>3. Scan this QR code</p>
-        {props.formState.encoded_settings ? (
-          <QRCode value={props.formState.encoded_settings} />
-        ) : (
-          <Spinner
-            as="span"
-            animation="border"
-            size="100px"
-            role="status"
-            aria-hidden="true"
-          />
-        )}
+    <div style={{ textAlign: "center" }}>
+      <p>
+        <a href="https://docs.getodk.org/collect-install/" target="_blank">
+          1. Install ODK
+        </a>
+      </p>
+      <p>2. Open the ODK app</p>
+      <p>3. Scan this QR code</p>
+      {props.formState.encoded_settings ? (
+        <QRCode value={props.formState.encoded_settings} />
+      ) : (
+        <Spinner
+          as="span"
+          animation="border"
+          size="100px"
+          role="status"
+          aria-hidden="true"
+        />
+      )}
 
       {props.formState.draft ? (
-        <div style={{'margin-top':'20px'}}>
+        <div style={{ marginTop: "20px" }}>
           {/* <Button className="bg-dark border-0" style={{ "margin": "10px" }}
                         onClick={async () => {
                             await ProcessData({
@@ -245,37 +246,28 @@ function CardBody(props) {
                         }}
 
                     >Generate Mock Submissions</Button> */}
-           
-              *Your form is currently saved as a draft. Draft submissions you
-              make will be removed once the form is finalised.*
-            
-         
+          *Your form is currently saved as a draft. Draft submissions you make
+          will be removed once the form is finalised.*
         </div>
       ) : (
         <></>
       )}
 
-      <div style={{'margin-top':'20px'}}>
+      <div style={{ marginTop: "20px" }}>
         <form
           method="post"
           action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-          class="inline">
+          className="inline"
+        >
           <input type="hidden" name="token" value={props.authToken} />
-          <input
-            type="hidden"
-            name="redirect_url"
-            value={  formEditURL}
-          />
+          <input type="hidden" name="redirect_url" value={formEditURL} />
           <Button
             variant="dark"
-            style={{ "vertical-align": "center" }}
+            style={{ verticalAlign: "center" }}
             type="submit"
-            value="submit">
-            {props.formState.draft ? (
-              'Edit Draft'
-            ) : (
-             'Create New Draft'
-            )}
+            value="submit"
+          >
+            {props.formState.draft ? "Edit Draft" : "Create New Draft"}
           </Button>
         </form>
       </div>
@@ -363,6 +355,7 @@ export default function DataCollectionComponent() {
         authToken: authToken,
         formSelected: formSelected,
         projectSelected: projectSelected,
-      })}></MainCard>
+      })}
+    ></MainCard>
   );
 }
