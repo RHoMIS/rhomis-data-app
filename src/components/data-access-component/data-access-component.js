@@ -641,6 +641,14 @@ function ShowUnitsForm(props) {
         <Form.Select
           defaultValue="Select"
           onChange={async (event) => {
+            // autosave progress
+            await SubmitUnitsData({
+              ...props,
+              unitsData: unitsData,
+              unitsSelect: unitsSelect,
+              process_label: "Conversion Submission",
+            });
+
             setUnitsSelect(event.target.value);
             const newUnitsData = await FetchData({
               authToken: props.authToken,
