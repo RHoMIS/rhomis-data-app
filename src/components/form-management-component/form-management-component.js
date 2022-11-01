@@ -99,10 +99,10 @@ function SubmissionsCount(props) {
   if (props.draftOrLive === "live") {
     submissions = props.form.submissions.live;
   }
-  console.log("Submissions props");
+  // console.log("Submissions props");
 
-  console.log(props);
-  console.log(submissions);
+  // console.log(props);
+  // console.log(submissions);
   if (submissions === null) {
     submissions = "NA";
   }
@@ -125,8 +125,8 @@ function SubmissionsCount(props) {
 }
 
 async function FinalizeForm(props) {
-  console.log("Finalizing form");
-  console.log(props);
+  // console.log("Finalizing form");
+  // console.log(props);
   const result = await axios({
     method: "post",
     url: process.env.REACT_APP_AUTHENTICATOR_URL + "api/forms/publish",
@@ -142,8 +142,8 @@ async function FinalizeForm(props) {
 
 // Render the options button for each form
 function FormOptions(props) {
-  console.log("Form Options Props");
-  console.log(props);
+  // console.log("Form Options Props");
+  // console.log(props);
 
   let render_live = false;
   let render_draft = false;
@@ -174,7 +174,8 @@ function FormOptions(props) {
       <DropdownButton
         title="Options"
         variant="dark"
-        menuVariant="dark border-0"
+        menuVariant="dark"
+        className="border-0"
         drop="end"
       >
         {/* LIVE FORMS OPTIONS */}
@@ -200,7 +201,7 @@ function FormOptions(props) {
             <form
               method="post"
               action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-              class="inline"
+              className="inline"
             >
               <input type="hidden" name="token" value={props.authToken} />
               <input
@@ -266,7 +267,7 @@ function FormOptions(props) {
             <form
               method="post"
               action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-              class="inline"
+              className="inline"
             >
               <input type="hidden" name="token" value={props.authToken} />
               <input
@@ -405,7 +406,7 @@ function FormTables(props) {
                 }
 
                 return (
-                  <tr>
+                  <tr key={form.name}>
                     <td>{form.name}</td>
                     <td>{draft_version}</td>
                     <td>
@@ -426,7 +427,7 @@ function FormTables(props) {
                       />
                     </td>
 
-                    <td style={{ "text-align": "center" }}>
+                    <td style={{ textAlign: "center" }}>
                       <FormOptions
                         history={history}
                         form={form}
@@ -442,13 +443,13 @@ function FormTables(props) {
           ) : (
             <>
               <tr>
-                <td style={{ "text-align": "center" }} colSpan={5}>
+                <td style={{ textAlign: "center" }} colSpan={5}>
                   No forms created yet
                 </td>
               </tr>
             </>
           )}
-          {/* <tr><td style={{ "text-align": "center" }} colSpan={5}><a href="https://rhomis-survey.stats4sdtest.online"><Button >Start Creating a Survey</Button></a></td></tr></>} */}
+          {/* <tr><td style={{ "textAlign": "center" }} colSpan={5}><a href="https://rhomis-survey.stats4sdtest.online"><Button >Start Creating a Survey</Button></a></td></tr></>} */}
         </tbody>
       </Table>
       <ProjectNewForm
@@ -508,8 +509,8 @@ function FormManagementComponent() {
 
   const [formData, setFormData] = useState();
 
-  console.log("admin data");
-  console.log(adminData);
+  // console.log("admin data");
+  // console.log(adminData);
 
   const [formSelected, setFormSelected] = useState(null);
   const [filters, setFilters] = useState([]);
@@ -529,7 +530,7 @@ function FormManagementComponent() {
   }, []);
 
   useEffect(async () => {
-    console.log("projectSelected:  " + projectSelected);
+    // console.log("projectSelected:  " + projectSelected);
 
     async function GetUserInfo() {
       await FetchUserInformation({
@@ -575,7 +576,7 @@ function ProjectNewForm(props) {
     <form
       method="post"
       action={process.env.REACT_APP_SURVEY_BUILDER_URL}
-      class="inline"
+      className="inline"
     >
       <input type="hidden" name="project_name" value={props.projectSelected} />
       <input type="hidden" name="token" value={props.authToken} />
